@@ -1,5 +1,8 @@
+import { JDAnalysis } from "@/helper/types";
 import connectDB from "@/lib/db";
-import { tool } from "ai"
+import JDSchema from "@/schema/jobDescriptionSchema";
+import { google } from "@ai-sdk/google";
+import { generateObject, generateText, Output, tool } from "ai"
 import { z } from "zod"
 
 
@@ -11,14 +14,30 @@ class Tools {
       inputSchema: z.object({
         jobDescription: z.string().describe("Job description")
       }),
-      execute: async ({ jobDescription }) => {
+      execute: async (jobDescription): Promise<JDAnalysis> => {
+        console.log("job description", jobDescription)
+        const result = await generateText({
+          model: google("gemini-2.5-flash"),
+          output: Output.object({
+            schema: JDSchema,
+          }),
+          prompt: `
+      Analyze this job description and extract structured information.
+      
+      For ats_keywords: extract the exact technical terms, tools, 
+      frameworks, and skills that an ATS system would scan for.
+      Include both required and preferred skills as keywords.
+      Be specific — "React.js" not just "React", "Node.js" not "Node".
+      
+      Job Description:
+      ${jobDescription}
+    `,
+        })
 
-        return {
-          message: `h`,
-        };
-      },
+        return result.output
+      }
     });
-    return toolRes;
+    return toolRes
   }
 
   gapAnalyser = () => {

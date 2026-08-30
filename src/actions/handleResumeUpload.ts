@@ -1,5 +1,7 @@
 "use server"
 import pdfParser from "@/helper/parsePdf"
+import connectDB from "@/lib/db"
+import { User } from "@/models/user"
 import { z } from "zod"
 
 export type FormState = {
@@ -52,8 +54,12 @@ export default async function handelResumeUpload(prevState: FormState, formData:
 
   console.log({ resumeText })
 
+  await connectDB()
+  const user = await User.findByIdAndUpdate("6a943e00e48d6112e9120932", { resume: { resumeText } })
+  console.log({ user })
+
   return {
     success: true,
-    message: "success"
+    message: "Resume uploaded successfully"
   }
 }
