@@ -5,7 +5,7 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   email: string;
-  resume: {
+  resume?: {
     resumeText: string
   }
   createdAt: Date;

@@ -2,6 +2,7 @@
 import pdfParser from "@/helper/parsePdf"
 import connectDB from "@/lib/db"
 import { User } from "@/models/user"
+import { auth } from "@clerk/nextjs/server"
 import { z } from "zod"
 
 export type FormState = {
@@ -54,8 +55,14 @@ export default async function handelResumeUpload(prevState: FormState, formData:
 
   console.log({ resumeText })
 
+  const { userId } = await auth()
+
+  if (!userId) {
+    throw new Error("Unauthorized")
+  }
+
   await connectDB()
-  const user = await User.findByIdAndUpdate("6a943e00e48d6112e9120932", { resume: { resumeText } })
+  const user = await User.findOneAndUpdate({ clerkUserId: userId }, { resume: { resumeText } })
   console.log({ user })
 
   return {

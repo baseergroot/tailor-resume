@@ -1,3 +1,4 @@
+import AgentCallBtn from "@/components/agentCallBtn";
 import ResumeUploadForm from "@/components/forms/resumeUploadForm";
 
 
@@ -9,6 +10,7 @@ export default function Page() {
       <main>
         <ResumeUploadForm />
       </main>
+      <AgentCallBtn />
     </main>
   )
 }
