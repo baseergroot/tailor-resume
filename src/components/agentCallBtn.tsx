@@ -11,8 +11,6 @@ import {
 } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { resumeAgent as analyzeResume } from "@/actions/mainAgent"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
 
 
 export default function AgentCallBtn() {

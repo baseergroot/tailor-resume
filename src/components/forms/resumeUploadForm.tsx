@@ -16,7 +16,7 @@ const initialState: FormState = {
 };
 
 const ResumeUploadForm = () => {
-  const [state, formAction, isPending] = useActionState(handelResumeUpload, initialState)
+  const [state, formAction] = useActionState(handelResumeUpload, initialState)
   return (
     <form action={formAction}>
 
