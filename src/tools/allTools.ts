@@ -14,6 +14,7 @@ import { z } from "zod"
 class Tools {
 
   jobDescriptionAnalyser = () => {
+    console.log("job description analyser called")
     const toolRes = tool({
       description: "extract requirements from job description",
       inputSchema: z.object({
@@ -22,7 +23,7 @@ class Tools {
       execute: async (jobDescription): Promise<JDAnalysis> => {
         console.log("job description", jobDescription)
         const result = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
           output: Output.object({
             schema: JDSchema,
           }),
@@ -46,6 +47,7 @@ class Tools {
   }
 
   resumeAnalyser = () => {
+    console.log("resume analyser called")
     const toolResponse = tool({
       description: "extract structured information from a resume",
       inputSchema: z.object({}),
@@ -61,7 +63,7 @@ class Tools {
         console.log("resume text");
 
         const result = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
 
           output: Output.object({
             schema: ResumeSchema,
@@ -86,6 +88,7 @@ ${resumeText}
   }
 
   gapAnalyser = () => {
+    console.log("gap analyser called")
     const toolRes = tool({
       description: "compare the user's resume against a job description and identify skill and requirement gaps",
 
@@ -112,7 +115,7 @@ ${resumeText}
         console.log("gap analyser - job description", jobDescription)
 
         const resumeResult = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
 
           output: Output.object({
             schema: ResumeSchema,
@@ -134,7 +137,7 @@ ${user.resume.resumeText}
         console.log("gap analyser - resume", resume)
 
         const result = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
 
           output: Output.object({
             schema: GapSchema,
@@ -172,6 +175,7 @@ ${JSON.stringify(resume, null, 2)}
   }
 
   resumeRewriter = () => {
+    console.log("resume rewriter called")
     const toolRes = tool({
       description: "tailor the user's saved resume to a specific job description without inventing experience",
 
@@ -200,7 +204,7 @@ ${JSON.stringify(resume, null, 2)}
         console.log("resume rewriter - gap analysis", gapAnalysis)
 
         const result = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
 
           output: Output.object({
             schema: ResumeSchema,
@@ -239,6 +243,7 @@ ${user.resume.resumeText}
   }
 
   atsScorer = () => {
+    console.log("ats scorer called")
     const toolRes = tool({
       description: "score how well the user's resume matches a job description for ATS compatibility",
 
@@ -266,7 +271,7 @@ ${user.resume.resumeText}
         console.log("ats scorer - resume", user.resume.resumeText)
 
         const result = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
 
           output: Output.object({
             schema: ATSScoreSchema,
@@ -306,6 +311,7 @@ ${user.resume.resumeText}
   }
 
   coverLetterGenerator = () => {
+    console.log("cover letter generator called")
     const toolRes = tool({
       description: "generate a tailored cover letter based on the user's saved resume and a job description",
 
@@ -333,7 +339,7 @@ ${user.resume.resumeText}
         console.log("cover letter - resume", user.resume.resumeText)
 
         const result = await generateText({
-          model: google("gemini-2.5-flash"),
+          model: google("gemini-3.1-flash-lite"),
 
           prompt: `
 Write a concise, professional cover letter tailored to this job.

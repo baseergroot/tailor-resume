@@ -14,6 +14,8 @@ import {
 } from "@/tools/allTools"
 import AgentResponseSchema from "@/schema/agentResponseSchema"
 
+const toolExecutionCount: Record<string, number> = {}
+
 export async function resumeAgent(jobDescription: string) {
   const { userId } = await auth()
 
@@ -74,6 +76,16 @@ Keep the summary concise.
     resumeRewriter: resumeRewriter(),
     atsScorer: atsScorer(),
     coverLetterGenerator: coverLetterGenerator(),
+  },
+
+  onToolExecutionStart: ({ toolCall }) => {
+    const count = (toolExecutionCount[toolCall.toolName] = (toolExecutionCount[toolCall.toolName] ?? 0) + 1)
+    console.log(`[tool] ${toolCall.toolName} started (execution #${count})`)
+  },
+
+  onToolExecutionEnd: ({ toolCall, toolOutput, toolExecutionMs }) => {
+    const status = toolOutput.type === "tool-error" ? `ERROR: ${toolOutput.error}` : "ok"
+    console.log(`[tool] ${toolCall.toolName} finished (${status}, ${toolExecutionMs}ms)`)
   },
 
   })

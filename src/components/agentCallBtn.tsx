@@ -10,12 +10,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { resumeAgent as analyzeResume } from "@/actions/mainAgent"
+import { resumeAgent } from "@/actions/mainAgent"
 
 
 export default function AgentCallBtn() {
   const [jobDescription, setJobDescription] = useState("")
-  const [result, setResult] = useState<Awaited<ReturnType<typeof analyzeResume>> | null>(null)
+  const [result, setResult] = useState<Awaited<ReturnType<typeof resumeAgent>> | null>(null)
   const [error, setError] = useState("")
   const [isPending, startTransition] = useTransition()
 
@@ -27,7 +27,7 @@ export default function AgentCallBtn() {
 
     startTransition(async () => {
       try {
-        const result = await analyzeResume(jobDescription)
+        const result = await resumeAgent(jobDescription)
 
         setResult(result)
       } catch (error) {
