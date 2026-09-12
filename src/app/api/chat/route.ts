@@ -1,7 +1,8 @@
 import { stepCountIs, streamText, convertToModelMessages, createUIMessageStreamResponse, toUIMessageStream, createIdGenerator } from "ai";
 import { google } from "@ai-sdk/google";
 import { NextRequest, NextResponse } from "next/server";
-import { bookAppointmentTool, checkAvailableSlotsTool } from "@/tools/allTools";
+// TODO: Implement scheduling tools (bookAppointmentTool, checkAvailableSlotsTool)
+// import { bookAppointmentTool, checkAvailableSlotsTool } from "@/tools/allTools";
 import { headers } from "next/headers";
 import { checkRateLimit } from "@/lib/ratelimit";
 import connectDB from "@/lib/db";
@@ -88,13 +89,14 @@ Many visitors will be in other time zones. Always:
       messages: modelMessages,
       stopWhen: stepCountIs(5),
       maxRetries: 2,
-      tools: {
-        checkAvailableSlots: checkAvailableSlotsTool(),
-        bookAppointment: bookAppointmentTool()
-      },
-      toolApproval: {
-        bookAppointment: "user-approval",
-      },
+      // TODO: Add scheduling tools back when implemented
+      // tools: {
+      //   checkAvailableSlots: checkAvailableSlotsTool(),
+      //   bookAppointment: bookAppointmentTool()
+      // },
+      // toolApproval: {
+      //   bookAppointment: "user-approval",
+      // },
       ...(process.env.TOOL_APPROVAL_SECRET
         ? { experimental_toolApprovalSecret: process.env.TOOL_APPROVAL_SECRET }
         : {}),

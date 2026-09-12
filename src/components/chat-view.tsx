@@ -10,7 +10,6 @@ import {
 import { ChatHeader } from '@/components/chat-header';
 import { ChatMessage } from '@/components/chat-message';
 import { ChatInput } from '@/components/chat-input';
-import { Card } from '@/components/ui/card';
 import { Sidebar } from '@/components/sidebar';
 import { useRateLimit } from '@/hooks/use-rate-limit';
 import { useChatHistory } from '@/hooks/use-chat-history';
@@ -56,9 +55,7 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
     }),
     sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
     onError: (error) => {
-      // Any chat failure (e.g. 429 rate limit) may have consumed a token — re-sync state.
       refresh();
-      // The SDK fires onError without inserting a message, so surface it in the thread.
       const errorMessage =
         error instanceof Error && error.message
           ? error.message
@@ -74,11 +71,8 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
     },
   });
 
-  // Load persisted messages ONLY when viewing a specific chat id route (not on / fresh chat)
   useEffect(() => {
-    if (isNewChatRoute || !chatId) {
-      return;
-    }
+    if (isNewChatRoute || !chatId) return;
 
     let cancelled = false;
     fetch(`/api/chat/${encodeURIComponent(chatId)}`)
@@ -89,16 +83,12 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
           setMessages(data.messages);
         }
       })
-      .catch(() => {
-        // DB unreachable — continue with empty chat rather than bricking UI
-      })
+      .catch(() => {})
       .finally(() => {
         if (!cancelled) setHydratedChatId(chatId);
       });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [chatId, isNewChatRoute, setMessages]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -122,7 +112,6 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
     [chatId, router]
   );
 
-  // Initialize theme class on <html> element
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -131,7 +120,6 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
     }
   }, [isDarkMode]);
 
-  // Keyboard shortcut ⌘K / Ctrl+K for New Chat
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -143,7 +131,6 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNewChat]);
 
-  // Auto-scroll to bottom when messages update
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, status]);
@@ -154,17 +141,13 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
       const query = textToSend || input;
       if (!query.trim()) return;
 
-      // Track the chat in the sidebar registry; first message becomes its title.
       registerMessage(chatId, messages.length === 0 ? query.trim().slice(0, 48) : undefined);
 
-      // If user started from '/', update browser URL to /:chatId so it's directly shareable / refreshable
       if (isNewChatRoute && messages.length === 0) {
         window.history.pushState(null, '', `/${chatId}`);
       }
 
-      // Optimistically decrement the local counter; the server re-syncs via polling.
       refresh();
-      // Send text message via Vercel AI SDK
       sendMessage({ text: query.trim() });
       setInput('');
     },
@@ -202,8 +185,8 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
   ];
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-background text-foreground antialiased selection:bg-primary/20 pt-2 sm:pt-3">
-      {/* Chat History Sidebar (closed by default) */}
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-mm-canvas text-mm-ink antialiased selection:bg-mm-blue/20">
+      {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen((v) => !v)}
@@ -225,7 +208,7 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
         onToggleTheme={() => setIsDarkMode(!isDarkMode)}
       />
 
-      {/* Top Mobile-Friendly Header */}
+      {/* Header */}
       <ChatHeader
         onNewChat={handleNewChat}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
@@ -237,26 +220,24 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
         onRateLimitExpire={refresh}
       />
 
-      {/* Main Full-Width Content Area */}
+      {/* Main Content */}
       <div className="flex flex-col flex-1 h-full min-w-0">
-        {/* Chat Body */}
         <main className="flex-1 overflow-y-auto flex flex-col scrollbar-thin">
           {messages.length === 0 && !hydrated ? (
-            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-mm-steel">
               <RiLoader4Line className="w-6 h-6 animate-spin" />
-              <p className="text-sm">Loading conversation…</p>
+              <p className="text-sm">Loading conversation...</p>
             </div>
           ) : messages.length === 0 ? (
-            /* Empty State: Centered Greeting */
+            /* Empty State */
             <div className="flex-1 flex flex-col items-center justify-center p-4 max-w-3xl mx-auto w-full my-auto">
-              {/* Logo / Badge */}
-              <Logo size={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-emerald-950/40 mb-4" />
+              <Logo size={48} className="w-12 h-12 rounded-2xl shadow-lg shadow-mm-primary/10 mb-4" />
 
-              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground text-center mb-2">
-                Chat with Baseer&apos;s AI Assistant
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-mm-ink text-center mb-2">
+                Chat with AI Assistant
               </h1>
-              <p className="text-sm text-muted-foreground text-center max-w-md mb-8">
-                Explore full-stack &amp; AI agent projects, discuss freelance work, or schedule a quick intro call.
+              <p className="text-sm text-mm-steel text-center max-w-md mb-8">
+                Explore resume tailoring tools, discuss projects, or schedule a quick call.
               </p>
 
               {/* Quick Prompt Cards */}
@@ -264,31 +245,31 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
                 {quickPrompts.map((prompt, idx) => {
                   const Icon = prompt.icon;
                   return (
-                    <Card
+                    <button
                       key={idx}
                       onClick={() => handleSendMessage(prompt.query)}
-                      className="p-4 cursor-pointer hover:bg-muted/50 transition-all border-border/60 group"
+                      className="mm-card p-4 cursor-pointer hover:bg-mm-surface transition-all group text-left"
                     >
                       <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-muted text-muted-foreground group-hover:text-foreground transition-colors shrink-0">
+                        <div className="p-2 rounded-lg bg-mm-surface text-mm-steel group-hover:text-mm-ink transition-colors shrink-0">
                           <Icon className="w-4 h-4" />
                         </div>
                         <div className="space-y-1 min-w-0">
-                          <div className="text-xs font-semibold text-foreground group-hover:text-foreground">
+                          <div className="text-xs font-semibold text-mm-ink">
                             {prompt.title}
                           </div>
-                          <div className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                          <div className="text-[11px] text-mm-steel line-clamp-2 leading-relaxed">
                             {prompt.subtitle}
                           </div>
                         </div>
                       </div>
-                    </Card>
+                    </button>
                   );
                 })}
               </div>
             </div>
           ) : (
-            /* Active Trajectory: Streamed Messages List */
+            /* Messages */
             <div className="flex-1 py-4">
               {messages.map((message) => (
                 <ChatMessage
@@ -304,8 +285,8 @@ export function ChatView({ initialChatId, isNewChatRoute = false }: ChatViewProp
           )}
         </main>
 
-        {/* Chat Input — pinned below the scroll area so it never scrolls with messages */}
-        <div className="shrink-0 bg-gradient-to-t from-background via-background/95 to-transparent pt-4">
+        {/* Input */}
+        <div className="shrink-0 bg-gradient-to-t from-mm-canvas via-mm-canvas/95 to-transparent pt-4">
           <ChatInput
             input={input}
             setInput={setInput}

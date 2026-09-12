@@ -9,6 +9,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { useActionState } from "react"
 import { Button } from "../ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 const initialState: FormState = {
   success: false,
@@ -18,20 +20,38 @@ const initialState: FormState = {
 const ResumeUploadForm = () => {
   const [state, formAction] = useActionState(handelResumeUpload, initialState)
   return (
-    <form action={formAction}>
+    <Card>
+      <CardHeader>
+        <CardTitle>Upload Your Resume</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form action={formAction} className="space-y-4">
+          <Field>
+            <FieldLabel htmlFor="resume">Resume File</FieldLabel>
+            <Input id="resume" type="file" name="resume" required className="mm-input" />
+            <FieldDescription>Supports PDF and DOCX formats.</FieldDescription>
+          </Field>
 
-      <Field>
-        <FieldLabel htmlFor="resume">Upload Resume</FieldLabel>
-        <Input id="resume" type="file" name="resume" required />
-        <FieldDescription>Select a resume to upload.</FieldDescription>
-        <Button type="submit">Upload Resume</Button>
-      </Field>
+          <Button type="submit" className="mm-btn mm-btn-primary">
+            Upload Resume
+          </Button>
 
-      <p>response: {state.success ? "true" : "false"}</p>
-      <p>message: {state.message}</p>
-      <p>error: {state.errors?.resume}</p>
+          {state.message && (
+            <div className="mt-3">
+              {state.success ? (
+                <Badge variant="success">{state.message}</Badge>
+              ) : (
+                <Badge variant="destructive">{state.message}</Badge>
+              )}
+            </div>
+          )}
 
-    </form>
+          {state.errors?.resume && (
+            <p className="text-sm text-mm-error">{state.errors.resume}</p>
+          )}
+        </form>
+      </CardContent>
+    </Card>
   )
 }
 

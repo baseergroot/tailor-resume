@@ -33,7 +33,7 @@ export function ChatInput({
   onSubmit,
   status,
   onStop,
-  placeholder = 'Ask AI Agent anything...',
+  placeholder = 'Ask AI anything about resume tailoring...',
   rateLimit,
   secondsLeft,
   isLimited,
@@ -44,7 +44,6 @@ export function ChatInput({
   const isLoading = status === 'submitted' || status === 'streaming';
   const isDisabled = isLoading || isLimited || hydrating;
 
-  // Auto-adjust height of textarea up to max 200px
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -63,9 +62,9 @@ export function ChatInput({
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 pb-4 pt-2">
-      {/* Rate Limit Exceeded Banner */}
+      {/* Rate Limit Banner */}
       {isLimited && (
-        <div className="mb-2 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400 text-xs sm:text-sm font-medium animate-pulse select-none">
+        <div className="mb-2 flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-mm-error/30 bg-mm-error/5 text-mm-error text-xs sm:text-sm font-medium animate-pulse select-none">
           <RiTimerFlashFill className="w-4 h-4 shrink-0 animate-spin [animation-duration:2s]" />
           <span>
             Rate limit reached. Wait <span className="font-bold tabular-nums">{formatCountdown(secondsLeft)}</span> for the
@@ -82,35 +81,35 @@ export function ChatInput({
           }
         }}
         className={cn(
-          'relative rounded-2xl border border-border/80 bg-card shadow-lg transition-all focus-within:border-ring/60 focus-within:ring-2 focus-within:ring-ring/20',
+          'relative rounded-2xl border border-mm-hairline bg-mm-canvas transition-all focus-within:border-mm-blue-deep focus-within:border-2',
           (isLoading || isLimited) && 'opacity-90',
-          isLimited && 'border-red-500/40'
+          isLimited && 'border-mm-error/40'
         )}
       >
-        {/* Input Textarea */}
+        {/* Textarea */}
         <Textarea
           ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={
-              hydrating
-                ? 'Loading conversation…'
-                : isLimited
-                  ? 'Rate limit reached — please wait to send more messages'
-                  : placeholder
-            }
+            hydrating
+              ? 'Loading conversation...'
+              : isLimited
+                ? 'Rate limit reached — please wait to send more messages'
+                : placeholder
+          }
           rows={1}
           disabled={isDisabled}
-          className="min-h-[56px] max-h-[200px] border-0 bg-transparent px-4 py-3.5 text-sm sm:text-base text-foreground placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:border-0 shadow-none"
+          className="min-h-[56px] max-h-[200px] border-0 bg-transparent px-4 py-3.5 text-sm sm:text-base text-mm-ink placeholder:text-mm-stone focus-visible:ring-0 focus-visible:border-0 shadow-none"
         />
 
-        {/* Bottom Bar inside Input Card */}
+        {/* Bottom Bar */}
         <div className="flex items-center justify-between px-3 pb-3 pt-1">
-          {/* Active Status Badge */}
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium select-none px-1">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-muted text-[11px]">
-              <RiWrenchLine className="w-3 h-3 text-emerald-500" /> MCP Tools Enabled
+          {/* Status */}
+          <div className="flex items-center gap-1.5 text-xs text-mm-steel font-medium select-none px-1">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-mm-surface text-[11px]">
+              <RiWrenchLine className="w-3 h-3 text-mm-success-text" /> AI Tools Enabled
             </span>
             <RateLimitBadge
               rateLimit={rateLimit}
@@ -126,9 +125,9 @@ export function ChatInput({
               <Button
                 type="button"
                 size="icon"
-                variant="outline"
+                variant="destructive"
                 onClick={onStop}
-                className="h-9 w-9 rounded-xl border-destructive/40 text-destructive hover:bg-destructive/10"
+                className="h-9 w-9"
                 title="Stop generating"
               >
                 <RiStopCircleLine className="w-5 h-5" />
@@ -139,10 +138,10 @@ export function ChatInput({
                 size="icon"
                 disabled={!input.trim() || isDisabled}
                 className={cn(
-                  'h-9 w-9 rounded-xl transition-all',
+                  'h-9 w-9 transition-all',
                   input.trim() && !isLimited
-                    ? 'bg-foreground text-background hover:bg-foreground/90'
-                    : 'bg-muted text-muted-foreground hover:bg-muted'
+                    ? 'bg-mm-primary text-white hover:bg-mm-charcoal'
+                    : 'bg-mm-surface text-mm-muted hover:bg-mm-surface'
                 )}
                 title={isLimited ? 'Rate limit reached' : 'Send message'}
               >
@@ -153,9 +152,9 @@ export function ChatInput({
         </div>
       </form>
 
-      {/* Footer Disclaimer */}
-      <p className="mt-2 text-center text-[11px] text-muted-foreground/70 select-none">
-        AI Agent can make mistakes. Verify important info.
+      {/* Disclaimer */}
+      <p className="mt-2 text-center text-[11px] text-mm-muted select-none">
+        AI can make mistakes. Verify important info.
       </p>
     </div>
   );

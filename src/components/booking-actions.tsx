@@ -101,11 +101,7 @@ function timeZoneLabel(timeZone: string) {
 
 function formatSlot(value: string, timeZone = getBrowserTimeZone()) {
   const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
+  if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat(undefined, {
     dateStyle: 'medium',
     timeStyle: 'short',
@@ -115,11 +111,7 @@ function formatSlot(value: string, timeZone = getBrowserTimeZone()) {
 
 function formatDate(value: string, timeZone = getBrowserTimeZone()) {
   const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
+  if (Number.isNaN(date.getTime())) return value;
   return new Intl.DateTimeFormat(undefined, {
     weekday: 'short',
     month: 'short',
@@ -149,7 +141,7 @@ export function AvailabilitySlotPicker({
 
   if (part.state === 'input-streaming' || part.state === 'input-available') {
     return (
-      <div className="my-2 inline-flex items-center gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+      <div className="my-2 inline-flex items-center gap-2 rounded-md border border-mm-success-text/20 bg-mm-success-bg px-2.5 py-1 text-xs font-medium text-mm-success-text">
         <RiTimeLine className="h-3.5 w-3.5 animate-spin" />
         Checking availability...
       </div>
@@ -158,22 +150,20 @@ export function AvailabilitySlotPicker({
 
   if (part.state === 'output-error') {
     return (
-      <div className="my-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+      <div className="my-2 rounded-md border border-mm-error/30 bg-mm-error/10 px-3 py-2 text-xs text-mm-error">
         Could not load availability: {part.errorText}
       </div>
     );
   }
 
-  if (part.state !== 'output-available') {
-    return null;
-  }
+  if (part.state !== 'output-available') return null;
 
   const slots = part.output?.slots ?? [];
 
   if (slots.length === 0) {
     return (
-      <Card className="my-3 max-w-xl rounded-lg border-border/70 bg-card/80">
-        <CardContent className="p-3 text-sm text-muted-foreground">
+      <Card className="my-3 max-w-xl">
+        <CardContent className="p-3 text-sm text-mm-steel">
           {part.output?.message || 'No open slots were returned for this date.'}
         </CardContent>
       </Card>
@@ -184,21 +174,21 @@ export function AvailabilitySlotPicker({
   const timeZoneOptions = [timeZone, ...POPULAR_TIME_ZONES.filter((tz) => tz !== timeZone)];
 
   return (
-    <Card className="my-3 max-w-xl rounded-lg border-border/70 bg-card/80">
+    <Card className="my-3 max-w-xl">
       <CardHeader className="space-y-2 p-3 pb-2">
         <CardTitle className="flex items-center gap-2 text-sm">
-          <RiCalendarCheckLine className="h-4 w-4 text-primary" />
+          <RiCalendarCheckLine className="h-4 w-4 text-mm-primary" />
           Available slots
         </CardTitle>
 
-        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+        <label className="flex items-center gap-2 text-xs text-mm-steel">
           <RiTimeZoneLine className="h-3.5 w-3.5 shrink-0" />
           <span className="font-medium">Your timezone</span>
           <select
             value={timeZone}
             onChange={(e) => setTimeZone(e.target.value)}
             disabled={disabled}
-            className="h-7 flex-1 rounded-md border border-border/70 bg-muted/60 px-2 text-xs font-medium text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 disabled:opacity-50"
+            className="h-7 flex-1 rounded-lg border border-mm-hairline bg-mm-surface px-2 text-xs font-medium text-mm-ink outline-none focus-visible:border-mm-blue-deep focus-visible:ring-2 focus-visible:ring-mm-blue/20 disabled:opacity-50"
             title="Choose the timezone for the slot times below"
           >
             {timeZoneOptions.map((tz) => (
@@ -212,9 +202,7 @@ export function AvailabilitySlotPicker({
       <CardContent className="space-y-3 p-3 pt-0">
         {Object.entries(groupedSlots).map(([dateLabel, daySlots]) => (
           <div key={dateLabel} className="space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">
-              {dateLabel}
-            </div>
+            <div className="text-xs font-medium text-mm-steel">{dateLabel}</div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {daySlots.map((slot) => (
                 <Button
@@ -228,7 +216,7 @@ export function AvailabilitySlotPicker({
                       `I want to book this slot: ${slot}. My timezone is ${timeZone}.`
                     )
                   }
-                  className="h-auto min-h-10 justify-start rounded-lg px-3 py-2 text-left whitespace-normal"
+                  className="h-auto min-h-10 justify-start rounded-xl px-3 py-2 text-left whitespace-normal"
                   title="Select this slot"
                 >
                   <RiTimeLine className="h-4 w-4" />
@@ -253,13 +241,11 @@ function DetailRow({
   value: string;
 }) {
   return (
-    <div className="flex items-start gap-2 rounded-md bg-muted/60 px-2.5 py-2">
-      <div className="mt-0.5 text-muted-foreground">{icon}</div>
+    <div className="flex items-start gap-2 rounded-lg bg-mm-surface px-2.5 py-2">
+      <div className="mt-0.5 text-mm-steel">{icon}</div>
       <div className="min-w-0">
-        <div className="text-[11px] font-medium uppercase text-muted-foreground">
-          {label}
-        </div>
-        <div className="break-words text-sm text-foreground">{value}</div>
+        <div className="text-[11px] font-medium uppercase text-mm-muted">{label}</div>
+        <div className="break-words text-sm text-mm-ink">{value}</div>
       </div>
     </div>
   );
@@ -282,7 +268,7 @@ export function BookingApproval({
 
   if (part.state === 'input-streaming' || part.state === 'input-available') {
     return (
-      <div className="my-2 inline-flex items-center gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+      <div className="my-2 inline-flex items-center gap-2 rounded-md border border-mm-success-text/20 bg-mm-success-bg px-2.5 py-1 text-xs font-medium text-mm-success-text">
         <RiCalendarCheckLine className="h-3.5 w-3.5 animate-spin" />
         Preparing booking review...
       </div>
@@ -291,10 +277,10 @@ export function BookingApproval({
 
   if (part.state === 'approval-requested') {
     return (
-      <Card className="my-3 max-w-xl rounded-lg border-border/70 bg-card/90">
+      <Card className="my-3 max-w-xl">
         <CardHeader className="p-3 pb-2">
           <CardTitle className="flex items-center gap-2 text-sm">
-            <RiCalendarCheckLine className="h-4 w-4 text-primary" />
+            <RiCalendarCheckLine className="h-4 w-4 text-mm-primary" />
             Confirm booking
           </CardTitle>
         </CardHeader>
@@ -327,7 +313,7 @@ export function BookingApproval({
               type="button"
               disabled={disabled}
               onClick={() => onApproval({ id: part.approval!.id, approved: true })}
-              className="h-9 rounded-lg"
+              className="h-9 rounded-full"
               title="Confirm booking"
             >
               <RiCheckLine className="h-4 w-4" />
@@ -344,7 +330,7 @@ export function BookingApproval({
                   reason: 'User declined from the chat UI.',
                 })
               }
-              className="h-9 rounded-lg"
+              className="h-9 rounded-full"
               title="Cancel booking"
             >
               <RiCloseLine className="h-4 w-4" />
@@ -358,14 +344,13 @@ export function BookingApproval({
 
   if (part.state === 'approval-responded') {
     const approved = part.approval?.approved;
-
     return (
       <div
         className={cn(
           'my-2 inline-flex items-center gap-2 rounded-md border px-2.5 py-1 text-xs font-medium',
           approved
-            ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-            : 'border-muted bg-muted text-muted-foreground'
+            ? 'border-mm-success-text/20 bg-mm-success-bg text-mm-success-text'
+            : 'border-mm-hairline bg-mm-surface text-mm-steel'
         )}
       >
         {approved ? <RiCheckLine className="h-3.5 w-3.5" /> : <RiCloseLine className="h-3.5 w-3.5" />}
@@ -376,23 +361,22 @@ export function BookingApproval({
 
   if (part.state === 'output-available') {
     const output = part.output ?? {};
-
     return (
-      <Card className="my-3 max-w-xl rounded-lg border-border/70 bg-card/80">
+      <Card className="my-3 max-w-xl">
         <CardContent className="space-y-2 p-3">
           <div className="flex items-center gap-2 text-sm font-medium">
-            <RiCheckLine className="h-4 w-4 text-primary" />
+            <RiCheckLine className="h-4 w-4 text-mm-primary" />
             {output.success === false ? 'Booking not completed' : 'Booking confirmed'}
           </div>
           {output.message && (
-            <p className="text-sm text-muted-foreground">{output.message}</p>
+            <p className="text-sm text-mm-steel">{output.message}</p>
           )}
           {output.bookingUrl && (
             <a
               href={output.bookingUrl}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-lg')}
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-full')}
             >
               Open booking
             </a>
@@ -404,7 +388,7 @@ export function BookingApproval({
 
   if (part.state === 'output-error') {
     return (
-      <div className="my-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+      <div className="my-2 rounded-md border border-mm-error/30 bg-mm-error/10 px-3 py-2 text-xs text-mm-error">
         Booking failed: {part.errorText}
       </div>
     );
@@ -412,7 +396,7 @@ export function BookingApproval({
 
   if (part.state === 'output-denied') {
     return (
-      <div className="my-2 inline-flex items-center gap-2 rounded-md border border-muted bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+      <div className="my-2 inline-flex items-center gap-2 rounded-md border border-mm-hairline bg-mm-surface px-2.5 py-1 text-xs font-medium text-mm-steel">
         <RiCloseLine className="h-3.5 w-3.5" />
         Booking cancelled.
       </div>

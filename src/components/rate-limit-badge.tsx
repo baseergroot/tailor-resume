@@ -40,17 +40,17 @@ export function RateLimitBadge({ rateLimit, secondsLeft, isLimited, onExpire }: 
   const ratio = limit > 0 ? remaining / limit : 0;
   const tone =
     ratio > 0.4
-      ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500/25 bg-emerald-500/10'
+      ? 'text-mm-success-text border-mm-success-text/25 bg-mm-success-bg'
       : ratio > 0.15
-        ? 'text-amber-600 dark:text-amber-400 border-amber-500/25 bg-amber-500/10'
-        : 'text-red-600 dark:text-red-400 border-red-500/25 bg-red-500/10';
+        ? 'text-amber-600 border-amber-500/25 bg-amber-500/10'
+        : 'text-mm-error border-mm-error/25 bg-mm-error/10';
   const barTone =
-    ratio > 0.4 ? 'bg-emerald-500' : ratio > 0.15 ? 'bg-amber-500' : 'bg-red-500';
+    ratio > 0.4 ? 'bg-mm-success-text' : ratio > 0.15 ? 'bg-amber-500' : 'bg-mm-error';
 
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition-colors select-none shrink-0',
+        'flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-colors select-none shrink-0',
         tone,
         isLimited && 'animate-pulse'
       )}
@@ -60,7 +60,7 @@ export function RateLimitBadge({ rateLimit, secondsLeft, isLimited, onExpire }: 
       <span className="text-[11px] font-semibold whitespace-nowrap tabular-nums">
         {isLimited ? `Resets in ${formatCountdown(secondsLeft)}` : `${remaining}/${limit} left`}
       </span>
-      <span className="hidden xs:inline-block w-8 h-1 rounded-full bg-foreground/10 overflow-hidden">
+      <span className="hidden xs:inline-block w-8 h-1 rounded-full bg-mm-ink/10 overflow-hidden">
         <span
           className={cn('block h-full rounded-full transition-all duration-500', barTone)}
           style={{ width: `${Math.max(4, ratio * 100)}%` }}

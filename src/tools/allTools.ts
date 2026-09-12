@@ -72,8 +72,11 @@ class Tools {
           prompt: `
 Analyze this resume and extract structured information.
 
-Do not invent or infer information that is not present.
-Preserve the exact names of technologies, frameworks, tools, and skills.
+Extract personal information (name, headline, phone, email, location,
+LinkedIn, website) exactly as written in the resume. Leave a field
+empty when it is not present. Do not invent or infer information that
+is not present. Preserve the exact names of technologies, frameworks,
+tools, and skills.
 
 Resume:
 ${resumeText}
@@ -156,6 +159,10 @@ Identify:
 
 Do not assume the candidate has a skill unless it is supported
 by the resume.
+When a requirement is absent from the resume, phrase it as
+"not demonstrated in the resume" rather than stating the candidate
+does not have it. A missing item is a gap in what the resume
+demonstrates, not a fact about the candidate.
 
 Job Description:
 ${JSON.stringify(jobDescription, null, 2)}
@@ -211,16 +218,109 @@ ${JSON.stringify(resume, null, 2)}
           }),
 
           prompt: `
-Tailor the resume for the provided job description.
+Tailor the candidate's resume for the target job while preserving complete factual accuracy. The goal is to "maximize truthful ATS relevance while preserving the candidate's actual resume content". Do NOT replace the resume with a short generic version.
 
-Rules:
-- Do not invent skills, technologies, experience, projects, or achievements.
-- Do not add a technology simply because it appears in the job description.
-- Rewrite existing experience to emphasize relevant responsibilities and technologies.
-- Naturally incorporate relevant ATS keywords when supported by the resume.
-- Keep claims truthful.
-- Remove or de-emphasize irrelevant information where appropriate.
-- Preserve the candidate's actual experience and career history.
+### 1. Preserve useful resume content
+
+- Keep the candidate's existing career history, companies, roles, dates, projects, technologies, achievements, metrics, and responsibilities.
+- Keep the personal information header (name, headline, phone, email, location, LinkedIn, website) exactly as written in the original resume. Do not alter, reformat, or invent any part of it.
+- Do not remove relevant experience or projects simply because they are not a direct keyword match for the job. Plenty of job descriptions do not list every relevant technology.
+- Keep relevant supporting information even when it is not an exact JD keyword.
+- Only remove or significantly de-emphasize content when it is clearly irrelevant to the target job. When in doubt, keep it.
+- The tailored resume must be a complete resume, not a skeleton. It should never be meaningfully weaker or shorter than the original.
+
+### 2. Do not invent anything
+
+- Never add a skill, technology, responsibility, achievement, qualification, metric, company, project, job title, or experience that does not exist in the original resume.
+- Never generalize a specific technology, tool, pipeline, deployment, or implementation detail into a broader claim that is not explicitly supported by the original resume. For example, if the original says "EAS Build pipelines", do not rewrite it as "CI/CD pipelines" unless CI/CD is explicitly supported.
+- Never infer that the candidate used a technology merely because the job description asks for it.
+- ATS keyword optimization may ONLY use keywords that are truthfully supported by the original resume.
+- Never fabricate numbers, results, teams, or scope.
+
+### 3. Improve existing content (do not strip it down)
+
+- Rewrite existing bullet points to emphasize the most relevant parts of the candidate's actual experience.
+- Preserve concrete metrics exactly, such as "77% improvement" and "3s to 700ms".
+- Preserve meaningful technical implementation details when they strengthen the application.
+- Use job-description terminology where it accurately describes something already present in the resume.
+- Make bullets concise and impact-oriented, but DO NOT over-compress them. A concrete bullet is worth more than a vague one-line summary.
+
+### 4. Project selection
+
+- Prioritize projects most relevant to the job description by placing them earlier.
+- Do NOT delete a project just because it is not an exact JD match. Keep enough projects for a strong, complete resume.
+- If a project contains technologies or experience relevant to the job, preserve those details in the project description and its technology list.
+
+### 5. Experience
+
+- Preserve the candidate's complete employment history: actual dates, company names, role titles, and career timeline.
+- Do not reduce a detailed experience section to generic bullets. Rewrite the existing bullets and keep their substance.
+- Keep the 3-5 most impactful bullets per role, but keep them specific. Never replace a concrete bullet with a vague statement.
+
+### 6. Education
+
+- Preserve the original education information exactly in substance: institution, degree, and field.
+- Do NOT rephrase, decompose, or "improve" education entries. Reproduce them verbatim.
+- Never add a field to a degree that did not have one, and never append "in <field>" (e.g. do not turn "FSC Pre-Engineering" into "FSC Pre-Engineering in Pre-Engineering").
+- Do not infer degrees the candidate does not have (e.g. do not convert "FSC Pre-Engineering" into a bachelor's or master's degree).
+
+### 7. Seniority and tone
+
+- Do not inflate seniority or experience. Avoid words such as "extensive", "seasoned", "senior", "expert", or "X years of experience" unless the original resume genuinely supports them.
+- Describe experience factually and specifically ("Full Stack Engineer with experience building…"), never with empty hype.
+
+### 8. ATS optimization
+
+- Emphasize existing experience that matches the job description: surface the matching skills and include the job's terminology only where the original resume supports it.
+- Do NOT optimize ATS matching by deleting useful information. Keyword coverage must come from the candidate's real content, never from removing real content.
+
+### 9. Output
+
+Return a COMPLETE tailored resume using the ResumeSchema with:
+- the personal information header (personalInfo) preserved verbatim from the original,
+- a targeted summary (1-2 concrete sentences, no hype),
+- comprehensive technical skills relevant to the job (keep every skill/technology from the original that remains relevant),
+- strong rewritten experience bullets preserving metrics and specifics,
+- relevant projects with useful details,
+- original education preserved,
+- no fabricated information.
+
+### Bullet point style
+
+Where supported by the original resume, structure experience bullets around:
+
+Action + what was built/done + technology/context + measurable result.
+
+For example, instead of a generic responsibility:
+
+"Worked on application performance."
+
+Prefer a factual version such as:
+
+"Implemented Redis write-through caching, reducing page load time from 3s to 700ms."
+
+Only use the result if it exists in the original resume.
+
+### Tailoring strategy
+
+Use the gap analysis to determine which existing experiences should receive more emphasis.
+
+If the job description emphasizes:
+
+- a technology already present in the resume → emphasize relevant experience using that technology.
+- a responsibility already demonstrated → rewrite the relevant bullet to make that responsibility clearer.
+- a keyword already supported by the resume → incorporate the keyword naturally.
+- a skill not demonstrated in the resume → do not add it.
+
+The final resume should look like the same candidate's resume specifically optimized for this job, not like a newly invented resume.
+
+Before finalizing, internally verify:
+- Did I remove useful information unnecessarily?
+- Did I preserve all factual claims, companies, roles, dates, and career history?
+- Did I preserve important metrics such as "77%" and "3s to 700ms"?
+- Did I accidentally add anything only because it appeared in the JD?
+- Does this still represent the candidate's actual career history?
+- Is the resume more targeted than the original WITHOUT becoming significantly weaker or shorter?
 
 Job Description:
 ${JSON.stringify(jobDescription, null, 2)}
@@ -313,13 +413,14 @@ ${user.resume.resumeText}
   coverLetterGenerator = () => {
     console.log("cover letter generator called")
     const toolRes = tool({
-      description: "generate a tailored cover letter based on the user's saved resume and a job description",
+      description: "generate a tailored cover letter based on a resume and a job description",
 
       inputSchema: z.object({
         jobDescription: JDSchema,
+        resume: z.string().optional().describe("Full resume text. Omit to use the user's saved resume."),
       }),
 
-      execute: async ({ jobDescription }) => {
+      execute: async ({ jobDescription, resume }) => {
         const { userId } = await auth()
 
         if (!userId) {
@@ -330,13 +431,15 @@ ${user.resume.resumeText}
           clerkUserId: userId,
         })
 
-        if (!user?.resume?.resumeText) {
+        const source = resume || user?.resume?.resumeText
+
+        if (!source) {
           throw new Error("Resume not found")
         }
 
-        console.log("cover letter - user", user._id)
+        console.log("cover letter - user", user?._id)
         console.log("cover letter - job description", jobDescription)
-        console.log("cover letter - resume", user.resume.resumeText)
+        console.log("cover letter - resume", source)
 
         const result = await generateText({
           model: google("gemini-3.1-flash-lite"),
@@ -350,12 +453,13 @@ Rules:
 - Highlight the most relevant experience and skills for this specific role.
 - Avoid generic filler.
 - Keep it around 250-400 words.
+- Use the resume provided below even if it is a tailored version.
 
 Job Description:
 ${JSON.stringify(jobDescription, null, 2)}
 
 Resume:
-${user.resume.resumeText}
+${source}
 `,
         })
 
