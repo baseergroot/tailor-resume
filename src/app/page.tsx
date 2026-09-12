@@ -4,24 +4,25 @@ import {
   RiToolsLine,
   RiMoneyDollarCircleLine,
 } from "@remixicon/react";
+import Link from "next/link";
 
 export default async function Page() {
   return (
     <main className="min-h-screen">
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center text-center px-4 pt-20 pb-16 sm:pt-28 sm:pb-20 max-w-5xl mx-auto">
+      <section className="flex flex-col items-center justify-center text-center px-4 pt-14 pb-12 sm:pt-24 sm:pb-20 max-w-5xl mx-auto">
         <span className="mm-badge mm-badge-new mb-6 text-xs">AI-Powered</span>
         <h1 className="mm-hero-display text-mm-ink max-w-4xl mx-auto mb-6">
           Tailor Your Resume
         </h1>
-        <p className="text-lg sm:text-xl text-mm-steel max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p className="text-base sm:text-xl text-mm-steel max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed">
           Upload your resume, paste a job description, and let AI optimize it for
           maximum ATS compatibility and recruiter impact.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <a href="/dashboard" className="mm-btn mm-btn-primary px-8 py-3 text-base">
+          <Link href="/dashboard" className="mm-btn mm-btn-primary px-8 py-3 text-base">
             Start Tailoring
-          </a>
+          </Link>
           <a href="#features" className="mm-btn mm-btn-secondary px-8 py-3 text-base">
             Learn More
           </a>
@@ -29,8 +30,8 @@ export default async function Page() {
       </section>
 
       {/* Feature Cards */}
-      <section id="features" className="max-w-6xl mx-auto px-4 sm:px-8 pb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<section id="features" className="max-w-6xl mx-auto px-4 sm:px-8 pb-12 sm:pb-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="mm-card-coral">
             <RiFileTextLine className="w-8 h-8 mb-4 opacity-80" />
             <h3 className="text-xl font-semibold mb-2">Resume Analysis</h3>
@@ -66,11 +67,11 @@ export default async function Page() {
       </section>
 
       {/* AI Product Matrix */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-20">
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 pb-12 sm:pb-20">
         <h2 className="mm-heading-md text-mm-ink text-center mb-3">
           Full-Stack Resume Engine
         </h2>
-        <p className="text-mm-steel text-center mb-10 max-w-xl mx-auto">
+        <p className="text-mm-steel text-center mb-8 sm:mb-10 mx-auto">
           Six AI-powered tools working together to transform your resume for any role.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -90,15 +91,15 @@ export default async function Page() {
         </div>
       </section>
 
-      {/* CTA Strip */}
-      <section className="mm-card-coral mx-4 sm:mx-8 mb-20 text-center py-12 px-6">
+{/* CTA Strip */}
+        <section className="mm-card-coral mx-4 sm:mx-8 mb-12 sm:mb-20 text-center py-10 sm:py-12 px-6">
         <h2 className="mm-heading-md mb-4">Ready to Optimize Your Resume?</h2>
-        <p className="text-sm opacity-80 mb-6 max-w-lg mx-auto">
+        <p className="text-sm opacity-80 mb-6 mx-auto ">
           Get AI-powered analysis, ATS scoring, and a tailored resume in under a minute.
         </p>
-        <a href="/dashboard" className="mm-btn mm-btn-tertiary px-8 py-3 text-base">
+        <Link href="/dashboard" className="mm-btn mm-btn-tertiary px-8 py-3 text-base">
           Start Now — It&apos;s Free
-        </a>
+        </Link>
       </section>
 
       {/* Stats Strip */}
@@ -132,7 +133,7 @@ export default async function Page() {
               <h4 className="text-sm font-medium mb-3">Product</h4>
               <ul className="space-y-2">
                 <li><a href="#features" className="text-sm text-mm-muted hover:text-white transition-colors">Features</a></li>
-                <li><a href="/dashboard" className="text-sm text-mm-muted hover:text-white transition-colors">Get Started</a></li>
+                <li><Link href="/dashboard" className="text-sm text-mm-muted hover:text-white transition-colors">Get Started</Link></li>
               </ul>
             </div>
             <div>

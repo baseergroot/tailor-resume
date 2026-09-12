@@ -152,6 +152,10 @@
 }
 
 @layer base {
+  :root {
+    --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+    --font-heading: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -168,34 +172,34 @@
   /* MiniMax Hero Display */
   .mm-hero-display {
     font-family: var(--font-heading);
-    font-size: 80px;
-    font-weight: 600;
-    line-height: 1.10;
-    letter-spacing: -2px;
-  }
-
-  /* MiniMax Display LG */
-  .mm-display-lg {
-    font-family: var(--font-heading);
-    font-size: 56px;
+    font-size: clamp(40px, 8vw, 80px);
     font-weight: 600;
     line-height: 1.10;
     letter-spacing: -1.5px;
   }
 
+  /* MiniMax Display LG */
+  .mm-display-lg {
+    font-family: var(--font-heading);
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 600;
+    line-height: 1.10;
+    letter-spacing: -1px;
+  }
+
   /* MiniMax Heading LG */
   .mm-heading-lg {
     font-family: var(--font-heading);
-    font-size: 40px;
+    font-size: clamp(28px, 5vw, 40px);
     font-weight: 600;
     line-height: 1.20;
-    letter-spacing: -1px;
+    letter-spacing: -0.75px;
   }
 
   /* MiniMax Heading MD */
   .mm-heading-md {
     font-family: var(--font-heading);
-    font-size: 32px;
+    font-size: clamp(24px, 4.5vw, 32px);
     font-weight: 600;
     line-height: 1.25;
     letter-spacing: -0.5px;
@@ -204,7 +208,7 @@
   /* MiniMax Heading SM */
   .mm-heading-sm {
     font-family: var(--font-heading);
-    font-size: 24px;
+    font-size: clamp(20px, 3.5vw, 24px);
     font-weight: 600;
     line-height: 1.30;
   }
