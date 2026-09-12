@@ -1,5 +1,7 @@
 import { runResumeAnalysis } from "@/actions/agentRunner"
 
+export const maxDuration = 300
+
 export async function POST(request: Request) {
   let jobDescription = ""
   let generateCoverLetter = false

@@ -2,6 +2,8 @@ import { NextRequest } from "next/server"
 import ResumeSchema from "@/schema/resumeSchema"
 import { renderResumePdf } from "@/lib/resumePdf"
 
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
