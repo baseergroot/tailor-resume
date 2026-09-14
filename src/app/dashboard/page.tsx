@@ -40,7 +40,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Analyzer */}
-        <ResumeAnalyzer />
+        {hasResume && <ResumeAnalyzer />}
       </div>
     </main>
   );

@@ -7,7 +7,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useActionState } from "react"
+import { useActionState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -19,6 +20,11 @@ const initialState: FormState = {
 
 const ResumeUploadForm = () => {
   const [state, formAction] = useActionState(handelResumeUpload, initialState)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (state.success) router.refresh()
+  }, [state.success, router])
   return (
     <Card>
       <CardHeader>
