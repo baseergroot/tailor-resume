@@ -24,4 +24,3 @@ Read `PROJECT_CONTEXT.md` (repo root) for the full picture — it describes the 
 - Use the `mm-*` design-token system in components (e.g. `text-mm-steel`, `bg-mm-surface`, `mm-btn mm-btn-primary`, `mm-card`) instead of raw Tailwind palette colors.
 - Don't add code comments unless asked.
 - Run `pnpm exec tsc --noEmit` and lint changed files after edits.
-- Do NOT touch `src/app/api/chat/route.ts` or the chat scheduling-tool TODO (`bookAppointmentTool`, `checkAvailableSlotsTool`) unless explicitly asked — separate in-flight feature.

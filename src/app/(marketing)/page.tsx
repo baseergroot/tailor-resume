@@ -112,6 +112,10 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(appSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
 
       {/* Hero */}
       <section className="flex flex-col items-center justify-center text-center px-4 pt-14 pb-12 sm:pt-24 sm:pb-20 max-w-5xl mx-auto">
@@ -120,7 +124,7 @@ export default function Page() {
           Tailor Your Resume to Any Job
         </h1>
         <p className="text-base sm:text-xl text-mm-steel mb-8 sm:mb-10 leading-relaxed mx-auto">
-          Upload your resume, paste a job description, and let Hirefit's AI
+          Upload your resume, paste a job description, and let Hirefit&apos;s AI
           optimize it for maximum ATS compatibility and recruiter impact.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -138,32 +142,32 @@ export default function Page() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="mm-card-coral">
             <RiFileTextLine className="w-8 h-8 mb-4 opacity-80" />
-            <h3 className="text-xl font-semibold mb-2">Resume Analysis</h3>
-            <p className="text-sm opacity-80 leading-relaxed">
+            <h2 className="text-xl font-semibold mb-2">Resume Analysis</h2>
+            <p className="text-sm leading-relaxed">
               Deep AI analysis of your resume content, structure, and keyword optimization.
             </p>
           </div>
 
           <div className="mm-card-blue">
             <RiBarChartBoxLine className="w-8 h-8 mb-4 opacity-80" />
-            <h3 className="text-xl font-semibold mb-2">ATS Scoring</h3>
-            <p className="text-sm opacity-80 leading-relaxed">
+            <h2 className="text-xl font-semibold mb-2">ATS Scoring</h2>
+            <p className="text-sm leading-relaxed">
               See your before and after ATS score with detailed compatibility metrics.
             </p>
           </div>
 
           <div className="mm-card-purple">
             <RiToolsLine className="w-8 h-8 mb-4 opacity-80" />
-            <h3 className="text-xl font-semibold mb-2">Smart Rewriting</h3>
-            <p className="text-sm opacity-80 leading-relaxed">
+            <h2 className="text-xl font-semibold mb-2">Smart Rewriting</h2>
+            <p className="text-sm leading-relaxed">
               AI-powered resume rewriting that preserves your voice while optimizing content.
             </p>
           </div>
 
           <div className="mm-card-magenta">
             <RiMoneyDollarCircleLine className="w-8 h-8 mb-4 opacity-80" />
-            <h3 className="text-xl font-semibold mb-2">Cover Letters</h3>
-            <p className="text-sm opacity-80 leading-relaxed">
+            <h2 className="text-xl font-semibold mb-2">Cover Letters</h2>
+            <p className="text-sm leading-relaxed">
               Generate tailored cover letters that complement your optimized resume.
             </p>
           </div>
@@ -188,7 +192,7 @@ export default function Page() {
             { title: "Cover Letter Gen", desc: "Creates a personalized cover letter aligned with the job requirements." },
           ].map((tool, i) => (
             <div key={i} className="mm-tile">
-              <h4 className="text-base font-semibold text-mm-ink mb-2">{tool.title}</h4>
+              <h3 className="text-base font-semibold text-mm-ink mb-2">{tool.title}</h3>
               <p className="text-sm text-mm-steel leading-relaxed">{tool.desc}</p>
             </div>
           ))}
@@ -198,7 +202,7 @@ export default function Page() {
       {/* CTA Strip */}
       <section className="mm-card-coral mx-4 sm:mx-8 mb-12 sm:mb-20 text-center py-10 sm:py-12 px-6">
         <h2 className="mm-heading-md mb-4">Ready to Optimize Your Resume?</h2>
-        <p className="text-sm opacity-80 mb-6 mx-auto">
+        <p className="text-sm mb-6 mx-auto">
           Get AI-powered analysis, ATS scoring, and a tailored resume in under a minute.
         </p>
         <Link href="/dashboard" className="mm-btn mm-btn-tertiary px-8 py-3 text-base">
@@ -272,14 +276,14 @@ export default function Page() {
               </p>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">Product</h4>
+              <h3 className="text-sm font-medium mb-3">Product</h3>
               <ul className="space-y-2">
                 <li><a href="#features" className="text-sm text-mm-muted hover:text-white transition-colors">Features</a></li>
                 <li><Link href="/dashboard" className="text-sm text-mm-muted hover:text-white transition-colors">Get Started</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">Tools</h4>
+              <h3 className="text-sm font-medium mb-3">Tools</h3>
               <ul className="space-y-2">
                 <li><Link href="/tools/jd-analyzer" className="text-sm text-mm-muted hover:text-white transition-colors">JD Analyzer</Link></li>
                 <li><Link href="/tools/ats-scoring" className="text-sm text-mm-muted hover:text-white transition-colors">ATS Scorer</Link></li>
@@ -288,7 +292,7 @@ export default function Page() {
               </ul>
             </div>
             <div>
-              <h4 className="text-sm font-medium mb-3">Built With</h4>
+              <h3 className="text-sm font-medium mb-3">Built With</h3>
               <ul className="space-y-2">
                 <li><span className="text-sm text-mm-muted">Next.js 16</span></li>
                 <li><span className="text-sm text-mm-muted">Google Gemini AI</span></li>

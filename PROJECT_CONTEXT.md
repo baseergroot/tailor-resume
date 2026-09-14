@@ -15,7 +15,7 @@ An AI resume-analysis + job-tailoring SaaS. Users upload a resume, paste a job d
 - **Next.js 16.3.1** (App Router) + React 19 + TypeScript + Tailwind v4 — NOTE: this is a Next.js version with breaking changes vs. older Next. Read `node_modules/next/dist/docs/` before writing Next code. `use pnpm` always.
 - **AI SDK `ai` v7 + @ai-sdk/google** — agents use `google("gemini-3.1-flash-lite")`. `ToolLoopAgent` (AI SDK) drives the analysis.
 - **MongoDB + Mongoose 9** — `User.resume.resumeText` stores the uploaded resume text.
-- **Clerk** auth (`@clerk/nextjs/server` `auth()`); **Upstash** rate limiting (`@upstash/ratelimit` + `@upstash/redis`).
+- **Clerk** auth (`@clerk/nextjs/server` `auth()`). The sign-in/sign-up flows use Clerk's `<SignIn/>`/`<SignUp/>` components under `src/app/(auth)/`.
 - **@react-pdf/renderer** for server-side ATS-safe PDF generation; **zod** for all schemas; **unpdf** for resume parsing.
 
 ## Where things live
@@ -31,7 +31,6 @@ An AI resume-analysis + job-tailoring SaaS. Users upload a resume, paste a job d
 | Main client component (analysis UI + stepper) | `src/components/ResumeAnalyzer.tsx` |
 | Tool-progress stepper (n8n-style) | `src/components/ToolStepper.tsx` |
 | Resume upload form | `src/components/forms/resumeUploadForm.tsx` |
-| Chat UI + chat agent code (separate feature) | `src/components/chat-view.tsx`, `src/app/api/chat/*` |
 
 ## The resume-analysis pipeline
 
@@ -64,12 +63,14 @@ The client (`ResumeAnalyzer.tsx`) reads the stream and drives `ToolStepper`.
 
 ## Pages / routes
 
-- `/` — marketing landing page.
+- `/` — marketing landing page (static; Clerk-free via route-group isolation).
 - `/dashboard` — auth-gated; shows upload form (hidden when `User.resume` exists) + `ResumeAnalyzer`.
-- `/chat/[chatId]` and `/[chatId]` — chat feature (separate from resume pipeline).
+- `/tools/[slug]` — pSEO tool pages (ATS scoring, resume analyzer, JD analyzer, gap analyzer, resume rewriter, cover letter generator).
+- `/sign-in`, `/sign-up` — Clerk auth pages.
 - `/api/resume/analyze` — POST (SSE analysis; the one the client uses).
 - `/api/resume/pdf` — POST; validates `ResumeSchema`, returns `application/pdf` blob.
-- `/api/chat/*`, `/api/webhook/clerk`, `/api/create-user`, `/api/env`, `/api/models`, `/api/ratelimit` — chat/clerk/env infrastructure (auth + rate-limit aware).
+- `/api/webhook/clerk` — Clerk webhook (creates `User` doc on signup).
+- Marketing pages (`/`, `/tools/*`) are served statically with zero Clerk JS; only `/dashboard` and API routes pass through `src/proxy.ts` (Clerk middleware).
 
 ## Conventions / gotchas
 
@@ -77,7 +78,6 @@ The client (`ResumeAnalyzer.tsx`) reads the stream and drives `ToolStepper`.
 - Components import `cn` from `@/lib/utils` (shadcn `cn` package is also a dependency; both work).
 - **Do NOT add comments to code** unless asked.
 - **Auth**: services re-auth inside tools/routes via `auth()` + `User.findOne({ clerkUserId: userId })`; `connectDB()` before Mongo access.
-- **Do NOT touch `src/app/api/chat/route.ts`** and the chat scheduling-tool TODOs unless explicitly asked — they are a separate feature with their own in-flight work (`bookAppointmentTool`, `checkAvailableSlotsTool` are a TODO, currently commented out).
 - Don't install new deps for small things; `shadcn` is available for UI primitives. `@remixicon/react` for icons.
 - Existing eslint/typecheck: repo currently passes `pnpm exec tsc --noEmit` and `pnpm exec eslint`. Run both after changes.
 
@@ -92,5 +92,4 @@ pnpm build                   # production build (needs env vars / DB)
 
 ## Known open threads (as of the repo's current iteration)
 
-- Stepper + cover-letter toggle shipped; everything else is ongoing iteration.
-- The chat/booking feature (`bookAppointmentTool`, `checkAvailableSlotsTool`) is a stub/TODO.
+- Stepper + cover-letter toggle shipped; SEO/GEO + Clerk isolation and old-code cleanup are current iteration.
