@@ -1,0 +1,19 @@
+# Hirefit
+
+> Free AI resume tailoring tool: upload your resume, paste a job description, and get an ATS-optimized resume with a matching cover letter.
+
+Hirefit is a web app that tailors resumes to any job description using six AI tools: JD analyzer, resume analyzer, gap analyzer, ATS scorer, resume rewriter, and cover letter generator. It is preservation-first — it keeps every technology, skill, and metric from your original resume and never invents experience.
+
+## Key pages
+
+- [Home](https://tailor-resume-agent.vercel.app/)
+- [ATS Scoring](https://tailor-resume-agent.vercel.app/tools/ats-scoring)
+- [Resume Analyzer](https://tailor-resume-agent.vercel.app/tools/resume-analyzer)
+- [JD Analyzer](https://tailor-resume-agent.vercel.app/tools/jd-analyzer)
+- [Gap Analyzer](https://tailor-resume-agent.vercel.app/tools/gap-analyzer)
+- [Resume Rewriter](https://tailor-resume-agent.vercel.app/tools/resume-rewriter)
+- [Cover Letter Generator](https://tailor-resume-agent.vercel.app/tools/cover-letter-generator)
+
+## Pricing
+
+- [Pricing](https://tailor-resume-agent.vercel.app/pricing.md) — Free, no paid tiers.
