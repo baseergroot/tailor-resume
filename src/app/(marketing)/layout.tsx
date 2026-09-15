@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import AuthNav from "@/components/auth-nav";
 
 export default function MarketingLayout({ children }: LayoutProps<"/">) {
   return (
@@ -26,14 +27,7 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link href="/sign-in" className="mm-btn mm-btn-secondary text-sm h-9 px-4">
-            Login
-          </Link>
-          <Link href="/sign-up" className="mm-btn mm-btn-primary text-sm h-9 px-4">
-            Sign Up
-          </Link>
-        </div>
+        <AuthNav />
       </nav>
 
       <div className="flex-1">{children}</div>
