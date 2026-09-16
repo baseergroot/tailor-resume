@@ -54,9 +54,12 @@ function handleDownloadCoverLetter(text: string) {
 
 function formatError(message: string) {
   if (/no output generated/i.test(message)) {
-    return "The AI couldn't produce a result this time. The analysis runs several agent steps and occasionally exceeds its step limit. Please try again — if it keeps failing, try a shorter job description."
+    return "Something went wrong on our end. Please try again in a minute — if it keeps happening, try shortening the job description."
   }
-  return message
+  if (/fetch failed|network|timeout/i.test(message)) {
+    return "Couldn't reach our servers. Check your connection and try again."
+  }
+  return message || "Something went wrong. Please try again."
 }
 
 function MatchBadge({ level }: { level: AnalysisResult["matchLevel"] }) {
@@ -305,7 +308,6 @@ export default function ResumeAnalyzer() {
   const [error, setError] = useState("")
   const [isRunning, setIsRunning] = useState(false)
   const [steps, setSteps] = useState<ToolStep[]>([])
-  const [generateCoverLetter, setGenerateCoverLetter] = useState(false)
 
   const handleAnalyze = async () => {
     if (!jobDescription.trim() || isRunning) return
@@ -357,7 +359,7 @@ export default function ResumeAnalyzer() {
       const response = await fetch("/api/resume/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobDescription, generateCoverLetter }),
+        body: JSON.stringify({ jobDescription, generateCoverLetter: false }),
       })
 
       if (!response.ok || !response.body) {
@@ -422,6 +424,7 @@ export default function ResumeAnalyzer() {
               {isRunning ? "Analyzing…" : "Analyze Resume"}
             </Button>
 
+            {/* TODO: re-enable once cover letter generation is stable
             <label className="flex cursor-pointer select-none items-center gap-2 text-sm text-mm-steel">
               <input
                 type="checkbox"
@@ -432,6 +435,7 @@ export default function ResumeAnalyzer() {
               />
               Also generate a cover letter
             </label>
+            */}
           </div>
 
           {isRunning && (
