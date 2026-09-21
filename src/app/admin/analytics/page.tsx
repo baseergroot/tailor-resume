@@ -51,6 +51,7 @@ async function getAnalyticsData(dateRange: string) {
     signup_completed: 0,
     resume_uploaded: 0,
     jd_submitted: 0,
+    analysis_started: 0,
     tailoring_completed: 0,
     pdf_downloaded: 0,
   }

@@ -17,29 +17,18 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import AgentResponseSchema from "@/schema/agentResponseSchema"
 import ToolStepper, { toolLabel, type ToolStep } from "@/components/ToolStepper"
+import { trackEventClient } from "@/lib/analytics/track-event-client"
 
 type AnalysisResult = z.infer<typeof AgentResponseSchema>
 
 type Resume = NonNullable<AnalysisResult["tailoredResume"]>
 
-async function handleDownload(resume: Resume) {
-  const response = await fetch("/api/resume/pdf", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ resume }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate PDF")
-  }
-
-  const blob = await response.blob()
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  a.href = url
-  a.download = "tailored-resume.pdf"
-  a.click()
-  URL.revokeObjectURL(url)
+interface ResumeAnalyzerProps {
+  resumeText: string | null
+  isAnonymous: boolean
+  onTailoringComplete: (success: boolean) => void
+  showLoginModal: boolean
+  onLoginClick: () => void
 }
 
 function handleDownloadCoverLetter(text: string) {
@@ -302,7 +291,38 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function ResumeAnalyzer() {
+function LoginPrompt({ onLoginClick }: { onLoginClick: () => void }) {
+  return (
+    <Card className="border-mm-coral bg-mm-surface">
+      <CardContent className="pt-6 pb-6 text-center">
+        <div className="mb-4">
+          <svg className="mx-auto h-12 w-12 text-mm-coral" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-semibold text-mm-ink mb-2">Create your free account</h3>
+        <p className="text-sm text-mm-steel mb-6">
+          You&apos;ve used your free tailoring.<br />
+          Sign in with Google to tailor more resumes and save your resume for future jobs.
+        </p>
+        <Button
+          onClick={onLoginClick}
+          className="mm-btn mm-btn-primary w-full"
+        >
+          Continue with Google
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}
+
+export default function ResumeAnalyzer({
+  resumeText,
+  isAnonymous,
+  onTailoringComplete,
+  showLoginModal,
+  onLoginClick,
+}: ResumeAnalyzerProps) {
   const [jobDescription, setJobDescription] = useState("")
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [error, setError] = useState("")
@@ -312,10 +332,22 @@ export default function ResumeAnalyzer() {
   const handleAnalyze = async () => {
     if (!jobDescription.trim() || isRunning) return
 
+    if (isAnonymous && getAnonymousTailorCount() >= 1) {
+      onLoginClick()
+      return
+    }
+
     setError("")
     setResult(null)
     setSteps([])
     setIsRunning(true)
+
+    trackEventClient({
+      event: "analysis_started",
+      sessionId: isAnonymous ? "anonymous" : undefined,
+      path: "/dashboard",
+      metadata: { anonymous: isAnonymous },
+    })
 
     let stepId = 0
 
@@ -356,10 +388,17 @@ export default function ResumeAnalyzer() {
     }
 
     try {
-      const response = await fetch("/api/resume/analyze", {
+      const apiEndpoint = isAnonymous ? "/api/resume/analyze-anonymous" : "/api/resume/analyze"
+      const body: Record<string, unknown> = { jobDescription, generateCoverLetter: false }
+      if (isAnonymous && resumeText) {
+        body.resumeText = resumeText
+        body.sessionId = "anonymous"
+      }
+
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobDescription, generateCoverLetter: false }),
+        body: JSON.stringify(body),
       })
 
       if (!response.ok || !response.body) {
@@ -397,8 +436,39 @@ export default function ResumeAnalyzer() {
     }
   }
 
+  const handleDownload = async (resume: Resume) => {
+    try {
+      await handleDownload(resume)
+      trackEventClient({
+        event: "pdf_downloaded",
+        sessionId: isAnonymous ? "anonymous" : undefined,
+        path: "/dashboard",
+        metadata: { anonymous: isAnonymous },
+      })
+      onTailoringComplete(true)
+    } catch (err) {
+      console.error(err)
+      setError(err instanceof Error ? err.message : "Failed to generate PDF. Please try again.")
+      onTailoringComplete(false)
+    }
+  }
+
+  const handleDownloadCoverLetterBtn = (text: string) => {
+    handleDownloadCoverLetter(text)
+    trackEventClient({
+      event: "pdf_downloaded",
+      sessionId: isAnonymous ? "anonymous" : undefined,
+      path: "/dashboard",
+      metadata: { anonymous: isAnonymous, type: "cover_letter" },
+    })
+  }
+
   return (
     <div className="w-full max-w-3xl space-y-6">
+      {showLoginModal && (
+        <LoginPrompt onLoginClick={onLoginClick} />
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Analyze Your Resume</CardTitle>
@@ -423,19 +493,6 @@ export default function ResumeAnalyzer() {
             >
               {isRunning ? "Analyzing…" : "Analyze Resume"}
             </Button>
-
-            {/* TODO: re-enable once cover letter generation is stable
-            <label className="flex cursor-pointer select-none items-center gap-2 text-sm text-mm-steel">
-              <input
-                type="checkbox"
-                checked={generateCoverLetter}
-                onChange={(e) => setGenerateCoverLetter(e.target.checked)}
-                disabled={isRunning}
-                className="size-4 accent-mm-primary"
-              />
-              Also generate a cover letter
-            </label>
-            */}
           </div>
 
           {isRunning && (
@@ -461,7 +518,7 @@ export default function ResumeAnalyzer() {
             <CardHeader>
               <CardTitle>Analysis Results</CardTitle>
             </CardHeader>
-<CardContent className="space-y-5">
+            <CardContent className="space-y-5">
               <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
                 <ScoreRing score={result.tailoredAtsScore ?? result.atsScore} label="ATS" />
                 <div className="flex-1 space-y-3">
@@ -543,16 +600,7 @@ export default function ResumeAnalyzer() {
               </div>
               <ResumePreview resume={result.tailoredResume} />
               <div className="flex justify-end">
-                <Button
-                  onClick={async () => {
-                    try {
-                      await handleDownload(result.tailoredResume!)
-                    } catch (err) {
-                      console.error(err)
-                      setError(err instanceof Error ? err.message : "Failed to generate PDF. Please try again.")
-                    }
-                  }}
-                >
+                <Button onClick={() => handleDownload(result.tailoredResume!)}>
                   Download Resume
                 </Button>
               </div>
@@ -572,7 +620,7 @@ export default function ResumeAnalyzer() {
                 <div className="flex justify-end">
                   <Button
                     variant="outline"
-                    onClick={() => handleDownloadCoverLetter(result.coverLetter!)}
+                    onClick={() => handleDownloadCoverLetterBtn(result.coverLetter!)}
                   >
                     Download Cover Letter
                   </Button>
@@ -584,4 +632,16 @@ export default function ResumeAnalyzer() {
       )}
     </div>
   )
+}
+
+function getAnonymousTailorCount(): number {
+  if (typeof window === "undefined") return 0
+  try {
+    const value = localStorage.getItem("novai_tailor_count")
+    if (!value) return 0
+    const parsed = parseInt(value, 10)
+    return isNaN(parsed) ? 0 : parsed
+  } catch {
+    return 0
+  }
 }

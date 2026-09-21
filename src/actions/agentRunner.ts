@@ -2,14 +2,7 @@ import { auth } from "@clerk/nextjs/server"
 import { google } from "@ai-sdk/google"
 import { Output, ToolLoopAgent, isStepCount } from "ai"
 
-import {
-  jobDescriptionAnalyser,
-  resumeAnalyser,
-  gapAnalyser,
-  resumeRewriter,
-  atsScorer,
-  coverLetterGenerator,
-} from "@/tools/allTools"
+import { createTools, type ToolContext } from "@/tools/allTools"
 import AgentResponseSchema from "@/schema/agentResponseSchema"
 import { computeKeywordCoverage, extractJdKeywords } from "@/helper/atsScore"
 import connectDB from "@/lib/db"
@@ -35,6 +28,7 @@ export type ToolEvent =
 export type RunResumeAnalysisOptions = {
   generateCoverLetter?: boolean
   onEvent?: (event: ToolEvent) => void
+  context?: ToolContext
 }
 
 export async function runResumeAnalysis(
@@ -42,9 +36,10 @@ export async function runResumeAnalysis(
   options?: RunResumeAnalysisOptions,
 ) {
   const { userId } = await auth()
+  const context = options?.context
 
-  if (!userId) {
-    throw new Error("Unauthorized")
+  if (!userId && !context?.resumeText) {
+    throw new Error("Unauthorized: No user ID or resume provided")
   }
 
   if (!jobDescription.trim()) {
@@ -66,13 +61,15 @@ After the resume analysis is complete, generate a cover letter:
 Do NOT generate or include a cover letter. Leave the coverLetter field unset.
 `
 
+  const tools = createTools(context)
+
   const agent = new ToolLoopAgent({
     model: google("gemini-3.1-flash-lite"),
 
     instructions: `
 You are a resume analysis and tailoring agent.
 
-The user's resume is stored in the database.
+${context?.resumeText ? "The user's resume is provided directly." : "The user's resume is stored in the database."}
 Use the available tools to access and analyze it.
 
 Your process:
@@ -135,12 +132,12 @@ ${coverLetterInstructions}
   }),
 
   tools: {
-    jobDescriptionAnalyser: jobDescriptionAnalyser(),
-    resumeAnalyser: resumeAnalyser(),
-    gapAnalyser: gapAnalyser(),
-    resumeRewriter: resumeRewriter(),
-    atsScorer: atsScorer(),
-    coverLetterGenerator: coverLetterGenerator(),
+    jobDescriptionAnalyser: tools.jobDescriptionAnalyser,
+    resumeAnalyser: tools.resumeAnalyser,
+    gapAnalyser: tools.gapAnalyser,
+    resumeRewriter: tools.resumeRewriter,
+    atsScorer: tools.atsScorer,
+    coverLetterGenerator: tools.coverLetterGenerator,
   },
 
   onToolExecutionStart: ({ toolCall }) => {
@@ -182,12 +179,16 @@ ${jobDescription}
     throw new Error("No output generated")
   }
 
-  await connectDB()
-  const user = await User.findOne({ clerkUserId: userId })
+  let resumeText = context?.resumeText
+  if (!resumeText && userId) {
+    await connectDB()
+    const user = await User.findOne({ clerkUserId: userId })
+    resumeText = user?.resume?.resumeText
+  }
 
-  if (user?.resume?.resumeText) {
+  if (resumeText) {
     const jdKeywords = await extractJdKeywords(jobDescription)
-    const originalCoverage = computeKeywordCoverage(jdKeywords, user.resume.resumeText)
+    const originalCoverage = computeKeywordCoverage(jdKeywords, resumeText)
 
     result.output.atsScore = originalCoverage.score
 
@@ -205,12 +206,21 @@ ${jobDescription}
     }
   }
 
-  trackEvent({
-    event: "tailoring_completed",
-    clerkUserId: userId,
-    path: "/dashboard",
-    metadata: { atsScore: result.output?.atsScore },
-  })
+  if (userId) {
+    trackEvent({
+      event: "tailoring_completed",
+      clerkUserId: userId,
+      path: "/dashboard",
+      metadata: { atsScore: result.output?.atsScore },
+    })
+  } else if (context?.resumeText) {
+    trackEvent({
+      event: "tailoring_completed",
+      sessionId: context.sessionId,
+      path: "/dashboard",
+      metadata: { atsScore: result.output?.atsScore, anonymous: true },
+    })
+  }
 
   return result.output
 }

@@ -10,8 +10,34 @@ import { auth } from "@clerk/nextjs/server";
 import { generateText, Output, tool } from "ai"
 import { z } from "zod"
 
+interface ToolContext {
+  resumeText?: string
+  userId?: string
+  sessionId?: string
+}
+
+async function getResumeText(context: ToolContext): Promise<string | null> {
+  if (context.resumeText) {
+    return context.resumeText
+  }
+  if (context.userId) {
+    await connectDB()
+    const user = await User.findOne({ clerkUserId: context.userId })
+    return user?.resume?.resumeText ?? null
+  }
+  const { userId } = await auth()
+  if (!userId) return null
+  await connectDB()
+  const user = await User.findOne({ clerkUserId: userId })
+  return user?.resume?.resumeText ?? null
+}
 
 class Tools {
+  private context: ToolContext = {}
+
+  setContext(context: ToolContext) {
+    this.context = context
+  }
 
   jobDescriptionAnalyser = () => {
     console.log("job description analyser called")
@@ -20,7 +46,7 @@ class Tools {
       inputSchema: z.object({
         jobDescription: z.string().describe("Job description")
       }),
-      execute: async (jobDescription): Promise<JDAnalysis> => {
+      execute: async ({ jobDescription }): Promise<JDAnalysis> => {
         console.log("job description", jobDescription)
         const result = await generateText({
           model: google("gemini-3.1-flash-lite"),
@@ -53,12 +79,7 @@ class Tools {
       inputSchema: z.object({}),
 
       execute: async () => {
-        const { userId } = await auth()
-        await connectDB()
-        const user = await User.findOne({
-          clerkUserId: userId
-        })
-        const resumeText = user?.resume?.resumeText
+        const resumeText = await getResumeText(this.context)
 
         console.log("resume text");
 
@@ -100,21 +121,12 @@ ${resumeText}
       }),
 
       execute: async ({ jobDescription }) => {
-        const { userId } = await auth()
+        const resumeText = await getResumeText(this.context)
 
-        if (!userId) {
-          throw new Error("Unauthorized")
-        }
-
-        const user = await User.findOne({
-          clerkUserId: userId,
-        })
-
-        if (!user?.resume?.resumeText) {
+        if (!resumeText) {
           throw new Error("Resume not found")
         }
 
-        console.log("gap analyser - user", user._id)
         console.log("gap analyser - job description", jobDescription)
 
         const resumeResult = await generateText({
@@ -131,7 +143,7 @@ Do not invent or infer information that is not present.
 Preserve the exact names of technologies, frameworks, tools, and skills.
 
 Resume:
-${user.resume.resumeText}
+${resumeText}
 `,
         })
 
@@ -192,21 +204,12 @@ ${JSON.stringify(resume, null, 2)}
       }),
 
       execute: async ({ jobDescription, gapAnalysis }) => {
-        const { userId } = await auth()
+        const resumeText = await getResumeText(this.context)
 
-        if (!userId) {
-          throw new Error("Unauthorized")
-        }
-
-        const user = await User.findOne({
-          clerkUserId: userId,
-        })
-
-        if (!user?.resume?.resumeText) {
+        if (!resumeText) {
           throw new Error("Resume not found")
         }
 
-        console.log("resume rewriter - user", user._id)
         console.log("resume rewriter - job description", jobDescription)
         console.log("resume rewriter - gap analysis", gapAnalysis)
 
@@ -329,7 +332,7 @@ Gap Analysis:
 ${JSON.stringify(gapAnalysis, null, 2)}
 
 Original Resume:
-${user.resume.resumeText}
+${resumeText}
 `,
         })
 
@@ -352,23 +355,14 @@ ${user.resume.resumeText}
       }),
 
       execute: async ({ jobDescription }) => {
-        const { userId } = await auth()
+        const resumeText = await getResumeText(this.context)
 
-        if (!userId) {
-          throw new Error("Unauthorized")
-        }
-
-        const user = await User.findOne({
-          clerkUserId: userId,
-        })
-
-        if (!user?.resume?.resumeText) {
+        if (!resumeText) {
           throw new Error("Resume not found")
         }
 
-        console.log("ats scorer - user", user._id)
         console.log("ats scorer - job description", jobDescription)
-        console.log("ats scorer - resume", user.resume.resumeText)
+        console.log("ats scorer - resume", resumeText)
 
         const result = await generateText({
           model: google("gemini-3.1-flash-lite"),
@@ -397,7 +391,7 @@ Job Description:
 ${JSON.stringify(jobDescription, null, 2)}
 
 Resume:
-${user.resume.resumeText}
+${resumeText}
 `,
         })
 
@@ -421,23 +415,12 @@ ${user.resume.resumeText}
       }),
 
       execute: async ({ jobDescription, resume }) => {
-        const { userId } = await auth()
-
-        if (!userId) {
-          throw new Error("Unauthorized")
-        }
-
-        const user = await User.findOne({
-          clerkUserId: userId,
-        })
-
-        const source = resume || user?.resume?.resumeText
+        const source = resume || (await getResumeText(this.context))
 
         if (!source) {
           throw new Error("Resume not found")
         }
 
-        console.log("cover letter - user", user?._id)
         console.log("cover letter - job description", jobDescription)
         console.log("cover letter - resume", source)
 
@@ -473,4 +456,20 @@ ${source}
   }
 }
 
-export const { jobDescriptionAnalyser, resumeAnalyser, gapAnalyser, resumeRewriter, atsScorer, coverLetterGenerator } = new Tools()
+function createTools(context?: ToolContext) {
+  const tools = new Tools()
+  if (context) {
+    tools.setContext(context)
+  }
+  return {
+    jobDescriptionAnalyser: tools.jobDescriptionAnalyser(),
+    resumeAnalyser: tools.resumeAnalyser(),
+    gapAnalyser: tools.gapAnalyser(),
+    resumeRewriter: tools.resumeRewriter(),
+    atsScorer: tools.atsScorer(),
+    coverLetterGenerator: tools.coverLetterGenerator(),
+  }
+}
+
+export { createTools }
+export type { ToolContext }

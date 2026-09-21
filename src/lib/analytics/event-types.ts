@@ -4,6 +4,7 @@ export type AnalyticsEventName =
   | "signup_completed"
   | "resume_uploaded"
   | "jd_submitted"
+  | "analysis_started"
   | "tailoring_completed"
   | "pdf_downloaded"
 

@@ -3,14 +3,7 @@ import { google } from "@ai-sdk/google"
 import { Output, ToolLoopAgent, isStepCount } from "ai"
 import { z } from "zod"
 
-import {
-  jobDescriptionAnalyser,
-  resumeAnalyser,
-  gapAnalyser,
-  resumeRewriter,
-  atsScorer,
-  coverLetterGenerator,
-} from "@/tools/allTools"
+import { createTools } from "@/tools/allTools"
 import JDSchema from "@/schema/jobDescriptionSchema"
 import ResumeSchema from "@/schema/resumeSchema"
 import GapSchema from "@/schema/gapSchema"
@@ -115,6 +108,8 @@ export async function runSingleTool(
     onToolExecutionEnd,
   }
 
+  const tools = createTools()
+
   switch (slug) {
     case "jd-analyzer": {
       const agent = new ToolLoopAgent({
@@ -124,7 +119,7 @@ After the tool result comes back, output the structured job description exactly 
 - Copy terms (tools, skills, responsibilities) exactly as they appear in the job description.
 - Do not invent requirements.`,
         output: Output.object({ schema: JDSchema }),
-        tools: { jobDescriptionAnalyser: jobDescriptionAnalyser() },
+        tools: { jobDescriptionAnalyser: tools.jobDescriptionAnalyser },
         stopWhen: isStepCount(4),
         ...shared,
       })
@@ -141,7 +136,7 @@ After the tool result comes back, output the structured job description exactly 
 ${JD_INPUT_RULES}
 After the tool result comes back, output the ATS score analysis exactly as returned by the tool — do not add, summarize, or call further tools.`,
         output: Output.object({ schema: ATSScoreSchema }),
-        tools: { atsScorer: atsScorer() },
+        tools: { atsScorer: tools.atsScorer },
         stopWhen: isStepCount(4),
         ...shared,
       })
@@ -158,7 +153,7 @@ After the tool result comes back, output the ATS score analysis exactly as retur
 ${JD_INPUT_RULES}
 After the tool result comes back, output the gap analysis exactly as returned by the tool — do not add, summarize, or call further tools.`,
         output: Output.object({ schema: GapSchema }),
-        tools: { gapAnalyser: gapAnalyser() },
+        tools: { gapAnalyser: tools.gapAnalyser },
         stopWhen: isStepCount(4),
         ...shared,
       })
@@ -174,7 +169,7 @@ After the tool result comes back, output the gap analysis exactly as returned by
         instructions: `You are a resume analysis agent. Call resumeAnalyser exactly once — it reads the user's saved resume and extracts structured information.
 After the tool result comes back, output the structured resume exactly as returned by the tool — do not add, summarize, or call further tools.`,
         output: Output.object({ schema: ResumeSchema }),
-        tools: { resumeAnalyser: resumeAnalyser() },
+        tools: { resumeAnalyser: tools.resumeAnalyser },
         stopWhen: isStepCount(4),
         ...shared,
       })
@@ -194,8 +189,8 @@ ${JD_INPUT_RULES}
 After resumeRewriter returns, output the tailored resume exactly as returned by the tool — do not add, summarize, or call further tools.`,
         output: Output.object({ schema: ResumeSchema }),
         tools: {
-          gapAnalyser: gapAnalyser(),
-          resumeRewriter: resumeRewriter(),
+          gapAnalyser: tools.gapAnalyser,
+          resumeRewriter: tools.resumeRewriter,
         },
         stopWhen: isStepCount(4),
         ...shared,
@@ -213,7 +208,7 @@ After resumeRewriter returns, output the tailored resume exactly as returned by 
 ${JD_INPUT_RULES}
 After the tool result comes back, output the cover letter text in the required { letter } output format — do not editorialize or call further tools.`,
         output: Output.object({ schema: CoverLetterSchema }),
-        tools: { coverLetterGenerator: coverLetterGenerator() },
+        tools: { coverLetterGenerator: tools.coverLetterGenerator },
         stopWhen: isStepCount(4),
         ...shared,
       })
