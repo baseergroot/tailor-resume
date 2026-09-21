@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils"
 import AgentResponseSchema from "@/schema/agentResponseSchema"
 import ToolStepper, { toolLabel, type ToolStep } from "@/components/ToolStepper"
 import { trackEventClient } from "@/lib/analytics/track-event-client"
+import { getAnonymousTailorCount } from "@/lib/anonymous-storage"
 
 type AnalysisResult = z.infer<typeof AgentResponseSchema>
 
@@ -632,16 +633,4 @@ export default function ResumeAnalyzer({
       )}
     </div>
   )
-}
-
-function getAnonymousTailorCount(): number {
-  if (typeof window === "undefined") return 0
-  try {
-    const value = localStorage.getItem("novai_tailor_count")
-    if (!value) return 0
-    const parsed = parseInt(value, 10)
-    return isNaN(parsed) ? 0 : parsed
-  } catch {
-    return 0
-  }
 }

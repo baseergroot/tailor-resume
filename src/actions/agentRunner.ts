@@ -35,8 +35,13 @@ export async function runResumeAnalysis(
   jobDescription: string,
   options?: RunResumeAnalysisOptions,
 ) {
-  const { userId } = await auth()
   const context = options?.context
+  let userId: string | null = null
+
+  if (!context?.resumeText) {
+    const { userId: authUserId } = await auth()
+    userId = authUserId
+  }
 
   if (!userId && !context?.resumeText) {
     throw new Error("Unauthorized: No user ID or resume provided")
