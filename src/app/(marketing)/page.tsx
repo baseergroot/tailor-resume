@@ -6,6 +6,7 @@ import {
   RiMoneyDollarCircleLine,
 } from "@remixicon/react";
 import Link from "next/link";
+import { CTATracking } from "@/components/CTATracking";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://tailor-resume-agent.vercel.app";
@@ -128,9 +129,14 @@ export default function Page() {
           optimize it for maximum ATS compatibility and recruiter impact.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Link href="/dashboard" className="mm-btn mm-btn-primary px-8 py-3 text-base">
+          <CTATracking
+            href="/dashboard"
+            className="mm-btn mm-btn-primary px-8 py-3 text-base"
+            eventName="landing_cta_clicked"
+            ctaLabel="Start Tailoring Free"
+          >
             Start Tailoring Free
-          </Link>
+          </CTATracking>
           <a href="#features" className="mm-btn mm-btn-secondary px-8 py-3 text-base">
             Learn More
           </a>
@@ -205,9 +211,14 @@ export default function Page() {
         <p className="text-sm mb-6 mx-auto">
           Get AI-powered analysis, ATS scoring, and a tailored resume in under a minute.
         </p>
-        <Link href="/dashboard" className="mm-btn mm-btn-tertiary px-8 py-3 text-base">
+        <CTATracking
+          href="/dashboard"
+          className="mm-btn mm-btn-tertiary px-8 py-3 text-base"
+          eventName="landing_cta_clicked"
+          ctaLabel="Start Now — It&apos;s Free"
+        >
           Start Now — It&apos;s Free
-        </Link>
+        </CTATracking>
       </section>
 
       {/* FAQ */}
@@ -289,6 +300,12 @@ export default function Page() {
                 <li><Link href="/tools/ats-scoring" className="text-sm text-mm-muted hover:text-white transition-colors">ATS Scorer</Link></li>
                 <li><Link href="/tools/resume-rewriter" className="text-sm text-mm-muted hover:text-white transition-colors">Resume Rewriter</Link></li>
                 <li><Link href="/tools/cover-letter-generator" className="text-sm text-mm-muted hover:text-white transition-colors">Cover Letter Gen</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium mb-3">Guides</h3>
+              <ul className="space-y-2">
+                <li><Link href="/guides/tailor-resume-to-job-description" className="text-sm text-mm-muted hover:text-white transition-colors">How to Tailor a Resume to a Job Description</Link></li>
               </ul>
             </div>
             <div>

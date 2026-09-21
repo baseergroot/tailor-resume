@@ -14,6 +14,7 @@ import AgentResponseSchema from "@/schema/agentResponseSchema"
 import { computeKeywordCoverage, extractJdKeywords } from "@/helper/atsScore"
 import connectDB from "@/lib/db"
 import { User } from "@/models/user"
+import { trackEvent } from "@/lib/analytics/track-event"
 
 export type ToolEvent =
   | {
@@ -203,6 +204,13 @@ ${jobDescription}
       result.output.atsMissingKeywords = originalCoverage.missing
     }
   }
+
+  trackEvent({
+    event: "tailoring_completed",
+    clerkUserId: userId,
+    path: "/dashboard",
+    metadata: { atsScore: result.output?.atsScore },
+  })
 
   return result.output
 }

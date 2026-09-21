@@ -1,22 +1,29 @@
-import { runResumeAnalysis } from "@/actions/agentRunner"
+import { runSingleTool, SINGLE_TOOL_SLUGS, type SingleToolSlug } from "@/actions/singleToolRunner"
 import { trackEvent } from "@/lib/analytics/track-event"
 import { auth } from "@clerk/nextjs/server"
 
 export const maxDuration = 300
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ slug: string }> },
+) {
+  const { slug } = await params
+
+  if (!(SINGLE_TOOL_SLUGS as readonly string[]).includes(slug)) {
+    return Response.json({ error: "Unknown tool" }, { status: 404 })
+  }
+
   let jobDescription = ""
-  let generateCoverLetter = false
 
   try {
     const body = await request.json()
     jobDescription = typeof body.jobDescription === "string" ? body.jobDescription : ""
-    generateCoverLetter = Boolean(body.generateCoverLetter)
   } catch {
     return Response.json({ error: "Invalid request body" }, { status: 400 })
   }
 
-  if (!jobDescription.trim()) {
+  if (slug !== "resume-analyzer" && !jobDescription.trim()) {
     return Response.json({ error: "Job description is required" }, { status: 400 })
   }
 
@@ -25,8 +32,8 @@ export async function POST(request: Request) {
     trackEvent({
       event: "jd_submitted",
       clerkUserId: userId,
-      path: "/dashboard",
-      metadata: { generateCoverLetter },
+      path: `/tools/${slug}`,
+      metadata: { tool: slug },
     })
   }
 
@@ -43,13 +50,13 @@ export async function POST(request: Request) {
       }
 
       try {
-        const output = await runResumeAnalysis(jobDescription, {
-          generateCoverLetter,
+        const output = await runSingleTool(slug as SingleToolSlug, jobDescription, {
           onEvent: (event) => send(event),
         })
         send({ type: "result", output })
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Something went wrong. Please try again."
+        const message =
+          err instanceof Error ? err.message : "Something went wrong. Please try again."
         send({ type: "error", message })
       } finally {
         try {

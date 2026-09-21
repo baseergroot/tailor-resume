@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tools, reverseTools, type Tool } from "@/data/tools";
+import SingleToolRunner from "@/components/SingleToolRunner";
+import type { SingleToolSlug } from "@/actions/singleToolRunner";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://tailor-resume-agent.vercel.app";
@@ -82,12 +84,20 @@ export default async function ToolPage({
         <p className="text-base sm:text-lg text-mm-steel leading-relaxed">
           {tool.definition}
         </p>
-        <Link
-          href="/dashboard"
+        <a
+          href="#run-tool"
           className="mm-btn mm-btn-primary px-8 py-3 text-base mt-8 inline-block"
         >
           Try It Free
-        </Link>
+        </a>
+      </section>
+
+      {/* Live tool */}
+      <section className="px-4 sm:px-8 max-w-3xl mx-auto">
+        <SingleToolRunner
+          slug={tool.slug as SingleToolSlug}
+          needsJobDescription={tool.needsJobDescription}
+        />
       </section>
 
       {/* How it works */}
@@ -134,11 +144,11 @@ export default async function ToolPage({
         </div>
       </section>
 
-      {/* Related tools (internal linking) */}
+      {/* Related tools + guide (internal linking) */}
       <section className="border-t border-mm-hairline bg-mm-surface py-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-8">
           <h2 className="mm-heading-sm text-mm-ink text-center mb-6">
-            Try Hirefit&apos;s other AI tools
+            More from Hirefit
           </h2>
           <div className="flex flex-wrap justify-center gap-2">
             {reverseTools().map((related) => (
@@ -150,6 +160,12 @@ export default async function ToolPage({
                 {related.name}
               </Link>
             ))}
+            <Link
+              href="/guides/tailor-resume-to-job-description"
+              className="mm-btn mm-btn-secondary text-sm px-4 py-2"
+            >
+              Tailoring Guide
+            </Link>
           </div>
         </div>
       </section>

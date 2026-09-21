@@ -2,6 +2,7 @@ import { verifyWebhook } from "@clerk/nextjs/webhooks"
 import { User } from "@/models/user"
 import connectDB from "@/lib/db"
 import { NextRequest } from "next/server"
+import { trackEvent } from "@/lib/analytics/track-event"
 
 export async function POST(req: NextRequest) {
   console.log("Webhook triggered")
@@ -39,6 +40,12 @@ export async function POST(req: NextRequest) {
         })
 
         console.log("Mongo user created:", user.id)
+
+        trackEvent({
+          event: "signup_completed",
+          clerkUserId: user.id,
+          path: "/sign-up",
+        })
         break
       }
 

@@ -23,5 +23,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  entries.push({
+    url: `${siteUrl}/guides`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  });
+
+  entries.push({
+    url: `${siteUrl}/guides/tailor-resume-to-job-description`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.9,
+  });
+
   return entries;
 }

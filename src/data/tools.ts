@@ -7,6 +7,7 @@ export type Tool = {
   metaDescription: string;
   h1: string;
   definition: string;
+  needsJobDescription: boolean;
   howItWorks: string[];
   features: string[];
   faqs: ToolFaq[];
@@ -15,6 +16,7 @@ export type Tool = {
 export const tools: Tool[] = [
   {
     slug: "ats-scoring",
+    needsJobDescription: true,
     name: "ATS Scorer",
     metaTitle: "ATS Scoring — Check Your Resume ATS Compatibility",
     metaDescription:
@@ -51,6 +53,7 @@ export const tools: Tool[] = [
   },
   {
     slug: "resume-analyzer",
+    needsJobDescription: false,
     name: "Resume Analyzer",
     metaTitle: "Resume Analyzer — Free AI Resume Review",
     metaDescription:
@@ -87,6 +90,7 @@ export const tools: Tool[] = [
   },
   {
     slug: "jd-analyzer",
+    needsJobDescription: true,
     name: "JD Analyzer",
     metaTitle: "Job Description Analyzer — Extract Requirements & Keywords",
     metaDescription:
@@ -119,6 +123,7 @@ export const tools: Tool[] = [
   },
   {
     slug: "gap-analyzer",
+    needsJobDescription: true,
     name: "Gap Analyzer",
     metaTitle: "Resume Gap Analyzer — Find Missing Skills",
     metaDescription:
@@ -151,6 +156,7 @@ export const tools: Tool[] = [
   },
   {
     slug: "resume-rewriter",
+    needsJobDescription: true,
     name: "Resume Rewriter",
     metaTitle: "AI Resume Rewriter — Tailor Your Resume to Any Job",
     metaDescription:
@@ -187,6 +193,7 @@ export const tools: Tool[] = [
   },
   {
     slug: "cover-letter-generator",
+    needsJobDescription: true,
     name: "Cover Letter Gen",
     metaTitle: "AI Cover Letter Generator — Free Personalized Letters",
     metaDescription:

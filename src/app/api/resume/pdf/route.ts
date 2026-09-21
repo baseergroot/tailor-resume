@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server"
 import ResumeSchema from "@/schema/resumeSchema"
 import { renderResumePdf } from "@/lib/resumePdf"
+import { auth } from "@clerk/nextjs/server"
+import { trackEvent } from "@/lib/analytics/track-event"
 
 export const maxDuration = 60
 
@@ -14,6 +16,15 @@ export async function POST(request: NextRequest) {
     }
 
     const pdf = await renderResumePdf(parsed.data)
+
+    const { userId } = await auth()
+    if (userId) {
+      trackEvent({
+        event: "pdf_downloaded",
+        clerkUserId: userId,
+        path: "/dashboard",
+      })
+    }
 
     return new Response(new Blob([pdf], { type: "application/pdf" }), {
       headers: {

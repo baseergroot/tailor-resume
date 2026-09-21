@@ -4,6 +4,7 @@ import connectDB from "@/lib/db"
 import { User } from "@/models/user"
 import { auth } from "@clerk/nextjs/server"
 import { z } from "zod"
+import { trackEvent } from "@/lib/analytics/track-event"
 
 export type FormState = {
   success: boolean
@@ -64,6 +65,12 @@ export default async function handelResumeUpload(prevState: FormState, formData:
   await connectDB()
   const user = await User.findOneAndUpdate({ clerkUserId: userId }, { resume: { resumeText } })
   console.log({ user })
+
+  trackEvent({
+    event: "resume_uploaded",
+    clerkUserId: userId,
+    path: "/dashboard",
+  })
 
   return {
     success: true,
