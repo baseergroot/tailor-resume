@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Fragment } from "react"
 import { useAuth } from "@clerk/nextjs"
 import { SignInButton, SignUpButton } from "@clerk/nextjs"
 import ResumeUploadForm from "@/components/forms/resumeUploadForm"
@@ -13,6 +13,29 @@ import {
 } from "@/lib/anonymous-storage"
 import { trackEventClient } from "@/lib/analytics/track-event-client"
 import { savePendingResume } from "@/actions/savePendingResume"
+function InfoIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </svg>
+  )
+}
+
+const steps = [
+  { number: 1, label: "Upload Resume", description: "PDF or DOCX, up to 5MB" },
+  { number: 2, label: "Paste Job Description", description: "Copy from any job posting" },
+  { number: 3, label: "Get Results", description: "Tailored resume + ATS score + cover letter" },
+]
 
 export default function DashboardContent() {
   const { isLoaded, isSignedIn, userId } = useAuth()
@@ -20,6 +43,7 @@ export default function DashboardContent() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [hasResume, setHasResume] = useState(false)
   const [wasAnonymous, setWasAnonymous] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
 
   // Derived state
   const isAnonymous = !isSignedIn
@@ -48,6 +72,7 @@ export default function DashboardContent() {
   const handleResumeUploaded = (text: string) => {
     setResumeText(text)
     setHasResume(true)
+    setCurrentStep(2)
     if (isAnonymous) {
       localStorage.setItem("novai_pending_resume", JSON.stringify({ resumeText: text, timestamp: Date.now() }))
     }
@@ -56,9 +81,16 @@ export default function DashboardContent() {
   const handleTailoringComplete = async (success: boolean) => {
     if (success && isAnonymous) {
       const count = getAnonymousTailorCount()
+      console.log("[DEBUG] handleTailoringComplete - current count:", count)
       if (count === 0) {
         localStorage.setItem("novai_tailor_count", String(count + 1))
+        console.log("[DEBUG] Incremented count to:", count + 1)
+      } else {
+        console.log("[DEBUG] Count already >= 1, not incrementing")
       }
+    }
+    if (success) {
+      setCurrentStep(3)
     }
   }
 
@@ -83,6 +115,13 @@ export default function DashboardContent() {
   return (
     <main className="min-h-screen bg-mm-canvas">
       <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10 space-y-8">
+        {/* Social Proof Banner */}
+        <div className="bg-mm-primary/5 border border-mm-primary/20 rounded-lg p-4 text-center">
+          <p className="text-sm text-mm-steel">
+            Join <span className="font-semibold text-mm-ink">2,000+</span> job seekers who landed more interviews with HireFit
+          </p>
+        </div>
+
         {/* Header */}
         <div>
           <h1 className="mm-heading-lg text-mm-ink mb-2">Resume Dashboard</h1>
@@ -103,9 +142,82 @@ export default function DashboardContent() {
           )}
         </div>
 
+        {/* Step Indicator */}
+        <div className="hidden sm:block">
+          <div className="flex items-center justify-between mb-6">
+            {steps.map((step, i) => (
+              <Fragment key={step.number}>
+                <div className="flex flex-col items-center">
+                  <div
+                    className={`flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold transition-all ${
+                      currentStep > step.number
+                        ? "bg-mm-primary text-white"
+                        : currentStep === step.number
+                        ? "bg-mm-primary text-white ring-2 ring-mm-primary ring-offset-2"
+                        : "bg-mm-surface text-mm-muted border border-mm-hairline"
+                    }`}
+                  >
+                    {currentStep > step.number ? (
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      step.number
+                    )}
+                  </div>
+                  <span className={`text-xs font-medium mt-1.5 transition-colors ${
+                    currentStep >= step.number ? "text-mm-ink" : "text-mm-muted"
+                  }`}>
+                    {step.label}
+                  </span>
+                </div>
+                {i < steps.length - 1 && (
+                  <div
+                    className={`hidden sm:block w-full h-1 mx-2 transition-colors ${
+                      currentStep > step.number ? "bg-mm-primary" : "bg-mm-hairline"
+                    }`}
+                  />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Step Indicator */}
+        <div className="sm:hidden mb-6">
+          <div className="flex items-center justify-between">
+            {steps.map((step) => (
+              <div key={step.number} className="flex flex-col items-center flex-1">
+                <div
+                  className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-semibold transition-all ${
+                    currentStep > step.number
+                      ? "bg-mm-primary text-white"
+                      : currentStep === step.number
+                      ? "bg-mm-primary text-white ring-2 ring-mm-primary ring-offset-2"
+                      : "bg-mm-surface text-mm-muted border border-mm-hairline"
+                  }`}
+                >
+                  {currentStep > step.number ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    step.number
+                  )}
+                </div>
+                <span className={`text-[10px] font-medium mt-1 transition-colors ${
+                  currentStep >= step.number ? "text-mm-ink" : "text-mm-muted"
+                }`}>
+                  {step.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Upload */}
         {!hasResume ? (
-          <ResumeUploadForm onUploadComplete={handleResumeUploaded} isAnonymous={isAnonymous} />
+          <ResumeUploadForm onUploadComplete={handleResumeUploaded} isAnonymous={isAnonymous} setCurrentStep={setCurrentStep} />
         ) : (
           <>
             <div className="mm-card p-6 text-center">
@@ -118,6 +230,21 @@ export default function DashboardContent() {
                   Anonymous session — data stored locally in your browser
                 </p>
               )}
+            </div>
+
+            {/* ATS Info Box */}
+            <div className="mm-card bg-mm-surface/50 border-mm-coral/30 p-4">
+              <div className="flex items-start gap-3">
+                <InfoIcon className="w-5 h-5 text-mm-coral mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="text-sm font-semibold text-mm-ink mb-1">What is ATS?</h4>
+                  <p className="text-sm text-mm-steel">
+                    ATS (Applicant Tracking System) is software that filters resumes before humans see them.
+                    <strong className="text-mm-ink">75% of resumes are rejected by ATS</strong> for missing keywords.
+                    HireFit optimizes your resume with the exact keywords from the job description so you get seen.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Analyzer */}

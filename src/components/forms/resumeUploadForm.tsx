@@ -14,10 +14,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@clerk/nextjs"
 import { trackEventClient } from "@/lib/analytics/track-event-client"
+function InfoIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
+    </svg>
+  )
+}
 
 interface ResumeUploadFormProps {
   onUploadComplete?: (resumeText: string) => void
   isAnonymous?: boolean
+  setCurrentStep?: (step: number) => void
 }
 
 const initialState: FormState = {
@@ -25,7 +43,11 @@ const initialState: FormState = {
   message: "",
 };
 
-export default function ResumeUploadForm({ onUploadComplete, isAnonymous = false }: ResumeUploadFormProps) {
+export default function ResumeUploadForm({
+  onUploadComplete,
+  isAnonymous = false,
+  setCurrentStep,
+}: ResumeUploadFormProps) {
   const { isSignedIn } = useAuth()
   const router = useRouter()
   const [isUploading, setIsUploading] = useState(false)
@@ -76,6 +98,7 @@ export default function ResumeUploadForm({ onUploadComplete, isAnonymous = false
         })
 
         setSuccess(true)
+        setCurrentStep?.(2)
       } else {
         await formAction(formData)
         if (state.success) {
@@ -93,9 +116,25 @@ export default function ResumeUploadForm({ onUploadComplete, isAnonymous = false
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upload Your Resume</CardTitle>
+        <CardTitle>Step 1: Upload Your Resume</CardTitle>
+        <p className="text-sm text-mm-steel">PDF or DOCX, up to 5MB</p>
       </CardHeader>
       <CardContent>
+        {/* ATS Info Box */}
+        <div className="mb-4 mm-card bg-mm-surface/50 border-mm-coral/30 p-4">
+          <div className="flex items-start gap-3">
+            <InfoIcon className="w-5 h-5 text-mm-coral mt-0.5 flex-shrink-0" />
+            <div>
+              <h4 className="text-sm font-semibold text-mm-ink mb-1">What is ATS?</h4>
+              <p className="text-sm text-mm-steel">
+                ATS (Applicant Tracking System) is software that filters resumes before humans see them.
+                <strong className="text-mm-ink">75% of resumes are rejected by ATS</strong> for missing keywords.
+                HireFit optimizes your resume with the exact keywords from the job description so you get seen.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <Field>
             <FieldLabel htmlFor="resume">Resume File</FieldLabel>
@@ -103,7 +142,7 @@ export default function ResumeUploadForm({ onUploadComplete, isAnonymous = false
             <FieldDescription>Supports PDF and DOCX formats.</FieldDescription>
           </Field>
 
-          <Button type="submit" className="mm-btn mm-btn-primary" disabled={isUploading}>
+          <Button type="submit" className="mm-btn mm-btn-primary w-full" disabled={isUploading}>
             {isUploading ? "Uploading…" : "Upload Resume"}
           </Button>
 

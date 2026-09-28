@@ -37,9 +37,12 @@ function safeRemoveItem(key: string): void {
 
 export function getAnonymousTailorCount(): number {
   const value = safeGetItem(ANON_TAILOR_COUNT_KEY)
+  console.log("[DEBUG] getAnonymousTailorCount - raw value:", value)
   if (!value) return 0
   const parsed = parseInt(value, 10)
-  return isNaN(parsed) ? 0 : parsed
+  const result = isNaN(parsed) ? 0 : parsed
+  console.log("[DEBUG] getAnonymousTailorCount - parsed:", result)
+  return result
 }
 
 export function incrementAnonymousTailorCount(): number {

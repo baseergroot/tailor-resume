@@ -317,6 +317,15 @@ function LoginPrompt({ onLoginClick }: { onLoginClick: () => void }) {
   )
 }
 
+const LOADING_MESSAGES: Record<string, string> = {
+  jobDescriptionAnalyser: "Analyzing job requirements…",
+  resumeAnalyser: "Reading your resume…",
+  gapAnalyser: "Finding keyword gaps…",
+  atsScorer: "Calculating ATS score…",
+  resumeRewriter: "Rewriting your resume…",
+  coverLetterGenerator: "Writing your cover letter…",
+}
+
 export default function ResumeAnalyzer({
   resumeText,
   isAnonymous,
@@ -329,11 +338,16 @@ export default function ResumeAnalyzer({
   const [error, setError] = useState("")
   const [isRunning, setIsRunning] = useState(false)
   const [steps, setSteps] = useState<ToolStep[]>([])
+  const [loadingMessage, setLoadingMessage] = useState("")
 
   const handleAnalyze = async () => {
+    console.log("[DEBUG] handleAnalyze called - jobDescription:", jobDescription, "isRunning:", isRunning, "isAnonymous:", isAnonymous)
     if (!jobDescription.trim() || isRunning) return
 
-    if (isAnonymous && getAnonymousTailorCount() >= 1) {
+    const count = getAnonymousTailorCount()
+    console.log("[DEBUG] Anonymous tailor count:", count, "isAnonymous:", isAnonymous)
+    if (isAnonymous && count >= 1) {
+      console.log("[DEBUG] Blocking - count >= 1, showing login")
       onLoginClick()
       return
     }
@@ -357,13 +371,15 @@ export default function ResumeAnalyzer({
       [key: string]: unknown
     }) => {
       if (event.type === "start") {
+        const toolName = event.toolName as string
+        setLoadingMessage(LOADING_MESSAGES[toolName] ?? "Processing…")
         setSteps((prev) => [
           ...prev,
           {
             id: ++stepId,
             toolCallId: event.toolCallId as string,
-            toolName: event.toolName as string,
-            label: toolLabel(event.toolName as string),
+            toolName,
+            label: toolLabel(toolName),
             status: "running",
             executionCount: event.executionCount as number,
           },
@@ -383,8 +399,12 @@ export default function ResumeAnalyzer({
         )
       } else if (event.type === "result") {
         setResult(event.output as AnalysisResult)
+        setLoadingMessage("")
+        console.log("[DEBUG] AI tailoring complete, calling onTailoringComplete")
+        onTailoringComplete(true)
       } else if (event.type === "error") {
         setError(formatError(event.message as string))
+        setLoadingMessage("")
       }
     }
 
@@ -446,11 +466,9 @@ export default function ResumeAnalyzer({
         path: "/dashboard",
         metadata: { anonymous: isAnonymous },
       })
-      onTailoringComplete(true)
     } catch (err) {
       console.error(err)
       setError(err instanceof Error ? err.message : "Failed to generate PDF. Please try again.")
-      onTailoringComplete(false)
     }
   }
 
@@ -499,6 +517,17 @@ export default function ResumeAnalyzer({
           {isRunning && (
             <div className="space-y-3 pt-2">
               <ToolStepper steps={steps} />
+              {loadingMessage && (
+                <div className="flex items-center gap-2 text-sm text-mm-coral bg-mm-coral/5 px-3 py-2 rounded-lg">
+                  <span className="flex h-4 w-4 animate-spin">
+                    <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  </span>
+                  <span>{loadingMessage}</span>
+                </div>
+              )}
               <p className="text-xs text-mm-steel">
                 Each step in the pipeline is a separate AI call — this usually takes a couple of minutes.
               </p>
