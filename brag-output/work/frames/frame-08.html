@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>HireFit Brag - Frame 8</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @font-face {
+    font-family: 'DM Sans';
+    src: local('DM Sans'), local('Inter'), local('Helvetica Neue'), local('Helvetica'), local('Arial');
+  }
+  :root {
+    --mm-primary: #0a0a0a;
+    --mm-on-primary: #ffffff;
+    --mm-coral: #d4381a;
+    --mm-canvas: #ffffff;
+    --mm-surface: #f7f8fa;
+    --mm-hairline: #e5e7eb;
+    --mm-ink: #0a0a0a;
+    --mm-steel: #5f5f5f;
+    --mm-muted: #a8aab2;
+    --mm-coral-soft: #fff0ee;
+  }
+  body {
+    width: 1920px;
+    height: 1080px;
+    font-family: 'DM Sans', 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--mm-canvas);
+    color: var(--mm-ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    overflow: hidden;
+  }
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .step:not(:last-child)::after {
+    content: "";
+    width: 80px;
+    height: 2px;
+    background: var(--mm-coral);
+    margin: 0 -40px;
+  }
+  .step-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--mm-coral);
+    color: white;
+  }
+  .step-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--mm-coral);
+    max-width: 120px;
+  }
+  .loading-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--mm-coral-soft);
+    border: 1px solid rgba(212, 56, 26, 0.2);
+    border-radius: 12px;
+    padding: 16px 24px;
+    animation: slideIn 0.4s ease forwards;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .spinner {
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .loading-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--mm-coral);
+  }
+  .pipeline-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 400px;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--mm-steel);
+    opacity: 0.5;
+    transition: all 0.3s ease;
+  }
+  .pipeline-step.active {
+    color: var(--mm-ink);
+    opacity: 1;
+    font-weight: 500;
+  }
+  .pipeline-step .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mm-hairline);
+    transition: all 0.3s ease;
+  }
+  .pipeline-step.active .dot {
+    background: var(--mm-coral);
+    box-shadow: 0 0 0 4px var(--mm-coral-soft);
+  }
+  .pipeline-step.completed .dot {
+    background: var(--mm-coral);
+  }
+</style>
+</head>
+<body>
+  <div class="stepper">
+    <div class="step completed">
+      <div class="step-circle">✓</div>
+      <span class="step-label">Upload Resume</span>
+    </div>
+    <div class="step completed">
+      <div class="step-circle">✓</div>
+      <span class="step-label">Paste Job Description</span>
+    </div>
+    <div class="step active">
+      <div class="step-circle">
+        <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"/>
+          <path class="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+        </svg>
+      </div>
+      <span class="step-label">Get Results</span>
+    </div>
+  </div>
+
+  <div class="loading-card">
+    <svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+    </svg>
+    <span class="loading-text">Rewriting your resume…</span>
+  </div>
+
+  <div class="pipeline-steps">
+    <div class="pipeline-step completed"><span class="dot"></span>Analyzing job requirements…</div>
+    <div class="pipeline-step completed"><span class="dot"></span>Reading your resume…</div>
+    <div class="pipeline-step completed"><span class="dot"></span>Finding keyword gaps…</div>
+    <div class="pipeline-step completed"><span class="dot"></span>Calculating ATS score…</div>
+    <div class="pipeline-step active"><span class="dot"></span>Rewriting your resume…</div>
+    <div class="pipeline-step"><span class="dot"></span>Writing your cover letter…</div>
+  </div>
+</body>
+</html>

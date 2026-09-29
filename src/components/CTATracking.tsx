@@ -42,10 +42,10 @@ export function CTATracking({
     })
   }
 
-  return (
+  return ( 
     <Link
       href={href}
-      className={className}
+      className={`${className}`}
       onClick={handleClick}
       aria-busy={isNavigating}
     >

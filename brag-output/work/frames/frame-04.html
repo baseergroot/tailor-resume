@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>HireFit Brag - Frame 4</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @font-face {
+    font-family: 'DM Sans';
+    src: local('DM Sans'), local('Inter'), local('Helvetica Neue'), local('Helvetica'), local('Arial');
+  }
+  :root {
+    --mm-primary: #0a0a0a;
+    --mm-on-primary: #ffffff;
+    --mm-coral: #d4381a;
+    --mm-canvas: #ffffff;
+    --mm-surface: #f7f8fa;
+    --mm-hairline: #e5e7eb;
+    --mm-ink: #0a0a0a;
+    --mm-steel: #5f5f5f;
+    --mm-muted: #a8aab2;
+    --mm-success-text: #1ba673;
+    --mm-success-bg: #e8ffea;
+  }
+  body {
+    width: 1920px;
+    height: 1080px;
+    font-family: 'DM Sans', 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--mm-canvas);
+    color: var(--mm-ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    overflow: hidden;
+  }
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .step:not(:last-child)::after {
+    content: "";
+    width: 80px;
+    height: 2px;
+    background: var(--mm-coral);
+    margin: 0 -40px;
+  }
+  .step-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    background: var(--mm-coral);
+    color: white;
+  }
+  .step-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--mm-coral);
+    max-width: 120px;
+  }
+  .results-card {
+    width: 560px;
+    background: var(--mm-canvas);
+    border: 1px solid var(--mm-hairline);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .score-ring {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring .bg { fill: none; stroke: var(--mm-hairline); stroke-width: 8; }
+  .score-ring .progress {
+    fill: none;
+    stroke: var(--mm-coral);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 339.3;
+    stroke-dashoffset: 50;
+    animation: progressIn 1.5s ease forwards;
+  }
+  @keyframes progressIn { from { stroke-dashoffset: 339.3; } to { stroke-dashoffset: 50; } }
+  .score-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-number { font-size: 36px; font-weight: 700; color: var(--mm-ink); line-height: 1; }
+  .score-label { font-size: 11px; color: var(--mm-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .score-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .score-item { text-align: center; }
+  .score-item .value { font-size: 20px; font-weight: 700; color: var(--mm-ink); }
+  .score-item .label { font-size: 11px; color: var(--mm-muted); text-transform: uppercase; }
+  .matched-missing {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .chip.matched { background: var(--mm-success-bg); color: var(--mm-success-text); }
+  .chip.missing { background: #fff0f0; color: #d45656; }
+  .badge-success {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--mm-success-bg);
+    color: var(--mm-success-text);
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 24px;
+  }
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 9999px;
+    font-family: 'DM Sans', 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 28px;
+    background: var(--mm-primary);
+    color: var(--mm-on-primary);
+    border: none;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+  <div class="stepper">
+    <div class="step completed">
+      <div class="step-circle">✓</div>
+      <span class="step-label">Upload Resume</span>
+    </div>
+    <div class="step completed">
+      <div class="step-circle">✓</div>
+      <span class="step-label">Paste Job Description</span>
+    </div>
+    <div class="step active">
+      <div class="step-circle">✓</div>
+      <span class="step-label">Get Results</span>
+    </div>
+  </div>
+
+  <div class="results-card">
+    <div class="score-ring">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle class="bg" cx="70" cy="70" r="54"/>
+        <circle class="progress" cx="70" cy="70" r="54"/>
+      </svg>
+      <div class="score-text">
+        <span class="score-number">89</span>
+        <span class="score-label">ATS Score</span>
+      </div>
+    </div>
+    <div class="score-breakdown">
+      <div class="score-item">
+        <div class="value">34 → 89</div>
+        <div class="label">Before → After</div>
+      </div>
+      <div class="score-item">
+        <div class="value">Strong Match</div>
+        <div class="label">Match Level</div>
+      </div>
+    </div>
+    <div class="matched-missing">
+      <span class="chip matched">React ✓</span>
+      <span class="chip matched">TypeScript ✓</span>
+      <span class="chip matched">Node.js ✓</span>
+      <span class="chip matched">AWS ✓</span>
+      <span class="chip missing">GraphQL ✗</span>
+      <span class="chip missing">Kubernetes ✗</span>
+    </div>
+    <span class="badge-success">Requirements Met: Yes</span>
+    <button class="download-btn">Download Resume</button>
+  </div>
+</body>
+</html>

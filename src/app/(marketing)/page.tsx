@@ -182,16 +182,16 @@ export default function Page() {
         <p className="text-base sm:text-xl text-mm-steel mb-8 sm:mb-10 leading-relaxed mx-auto max-w-2xl">
           Paste a job description. Upload your resume. Get a tailored resume, ATS score, and cover letter — instantly.
         </p>
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md">
+        <div className="flex flex-col sm:flex-row gap-4 w-full">
           <CTATracking
             href="/dashboard"
-            className="mm-btn mm-btn-primary px-10 py-4 text-lg w-full sm:w-auto"
+            className="mm-btn mm-btn-primary px-10 py-4 text-lg w-full sm:w-auto flex-1"
             eventName="landing_cta_clicked"
             ctaLabel="Tailor My Resume Free"
           >
             Tailor My Resume Free →
           </CTATracking>
-          <a href="#features" className="mm-btn mm-btn-secondary px-8 py-3 text-base w-full sm:w-auto">
+          <a href="#features" className="mm-btn mm-btn-secondary px-8 py-3 text-base w-full sm:w-auto flex-1 inline-flex items-center justify-center">
             See How It Works
           </a>
         </div>

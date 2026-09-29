@@ -50,11 +50,12 @@ export default function ResumeUploadForm({
 }: ResumeUploadFormProps) {
   const { isSignedIn } = useAuth()
   const router = useRouter()
-  const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
 
-  const [state, formAction] = useActionState(handelResumeUpload, initialState)
+  const [state, formAction, isPending] = useActionState(handelResumeUpload, initialState)
+
+  const isUploading = isPending
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -66,7 +67,6 @@ export default function ResumeUploadForm({
       return
     }
 
-    setIsUploading(true)
     setError("")
     setSuccess(false)
 
@@ -108,8 +108,6 @@ export default function ResumeUploadForm({
     } catch (err) {
       const message = err instanceof Error ? err.message : "Upload failed. Please try again."
       setError(message)
-    } finally {
-      setIsUploading(false)
     }
   }
 
