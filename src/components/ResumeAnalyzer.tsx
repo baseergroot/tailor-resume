@@ -529,7 +529,7 @@ export default function ResumeAnalyzer({
                 </div>
               )}
               <p className="text-xs text-mm-steel">
-                Each step in the pipeline is a separate AI call — this usually takes a couple of minutes.
+                HireFit analyzes your resume and job description in real time, then shows your match and tailored results.
               </p>
             </div>
           )}

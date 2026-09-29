@@ -12,6 +12,13 @@ Free AI-powered resume tailoring platform. Upload your resume, paste a job descr
 
 **First tailoring is free without signup.** Second tailoring requires Google sign-in (resume is saved to your account).
 
+## Product Demo
+
+<video controls width="100%" poster="brag-output-2026-09-29-125623/brag.jpg">
+  <source src="brag-output-2026-09-29-125623/brag.mp4" type="video/mp4" />
+  Your browser does not support embedded video. [Watch the HireFit launch video](brag-output-2026-09-29-125623/brag.mp4).
+</video>
+
 ## Tech Stack
 
 | Layer | Technologies |
