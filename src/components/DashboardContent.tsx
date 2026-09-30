@@ -13,6 +13,7 @@ import {
 } from "@/lib/anonymous-storage"
 import { trackEventClient } from "@/lib/analytics/track-event-client"
 import { savePendingResume } from "@/actions/savePendingResume"
+import { fetchUserResume } from "@/actions/fetchUserResume"
 function InfoIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -68,6 +69,32 @@ export default function DashboardContent() {
       }
     }
   }, [isLoaded, isSignedIn, userId, wasAnonymous])
+
+  // Fetch user's resume from DB on initial load for authenticated users
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn || hasResume) return
+
+    let cancelled = false
+
+    const loadResume = async () => {
+      try {
+        const { resumeText, error } = await fetchUserResume()
+        if (!cancelled && resumeText) {
+          setResumeText(resumeText)
+          setHasResume(true)
+          setCurrentStep(2)
+        } else if (error) {
+          console.error("Failed to fetch resume:", error)
+        }
+      } catch (err) {
+        console.error("Failed to fetch resume:", err)
+      }
+    }
+
+    loadResume()
+
+    return () => { cancelled = true }
+  }, [isLoaded, isSignedIn, hasResume])
 
   const handleResumeUploaded = (text: string) => {
     setResumeText(text)

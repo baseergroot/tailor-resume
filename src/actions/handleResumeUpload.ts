@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics/track-event"
 export type FormState = {
   success: boolean
   message: string
+  resumeText?: string
   errors?: {
     resume?: string[]
   }

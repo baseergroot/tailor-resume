@@ -7,7 +7,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useActionState, useState } from "react"
+import { useActionState, useState, startTransition } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -57,9 +57,15 @@ export default function ResumeUploadForm({
 
   const isUploading = isPending
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+  // Refresh page when authenticated upload succeeds
+  if (!isAnonymous && isSignedIn && state.success) {
+    router.refresh()
+  }
+
+  const handleSubmit = async (formData: FormData) => {
+    // Only used for anonymous uploads
+    if (!isAnonymous && isSignedIn) return
+
     const file = formData.get("resume") as File
 
     if (!file) {
@@ -71,45 +77,47 @@ export default function ResumeUploadForm({
     setSuccess(false)
 
     try {
-      if (isAnonymous || !isSignedIn) {
-        const apiFormData = new FormData()
-        apiFormData.append("resume", file)
+      const apiFormData = new FormData()
+      apiFormData.append("resume", file)
 
-        const response = await fetch("/api/resume/upload-anonymous", {
-          method: "POST",
-          body: apiFormData,
-        })
+      const response = await fetch("/api/resume/upload-anonymous", {
+        method: "POST",
+        body: apiFormData,
+      })
 
-        const data = await response.json()
+      const data = await response.json()
 
-        if (!response.ok) {
-          throw new Error(data.error || "Failed to upload resume")
-        }
-
-        if (data.resumeText && onUploadComplete) {
-          onUploadComplete(data.resumeText)
-        }
-
-        trackEventClient({
-          event: "resume_uploaded",
-          sessionId: "anonymous",
-          path: "/dashboard",
-          metadata: { anonymous: true },
-        })
-
-        setSuccess(true)
-        setCurrentStep?.(2)
-      } else {
-        await formAction(formData)
-        if (state.success) {
-          router.refresh()
-        }
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to upload resume")
       }
+
+      if (data.resumeText && onUploadComplete) {
+        onUploadComplete(data.resumeText)
+      }
+
+      trackEventClient({
+        event: "resume_uploaded",
+        sessionId: "anonymous",
+        path: "/dashboard",
+        metadata: { anonymous: true },
+      })
+
+      setSuccess(true)
+      setCurrentStep?.(2)
     } catch (err) {
       const message = err instanceof Error ? err.message : "Upload failed. Please try again."
       setError(message)
     }
   }
+
+  const formActionWrapper = (formData: FormData) => {
+    if (isAnonymous || !isSignedIn) return
+    startTransition(() => {
+      formAction(formData)
+    })
+  }
+
+  const finalAction = isAnonymous || !isSignedIn ? handleSubmit : formActionWrapper
 
   return (
     <Card>
@@ -133,7 +141,7 @@ export default function ResumeUploadForm({
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={finalAction} className="space-y-4">
           <Field>
             <FieldLabel htmlFor="resume">Resume File</FieldLabel>
             <Input id="resume" type="file" name="resume" required className="mm-input" disabled={isUploading} />
