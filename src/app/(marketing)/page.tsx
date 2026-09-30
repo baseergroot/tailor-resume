@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: `${siteUrl}/og-image.png`,
+        url: `${siteUrl}/og.png`,
         width: 1200,
         height: 630,
         alt: "HireFit - AI Resume Tailoring",
