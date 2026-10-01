@@ -42,6 +42,26 @@ function handleDownloadCoverLetter(text: string) {
   URL.revokeObjectURL(url)
 }
 
+async function downloadResumePdf(resume: Resume) {
+  const response = await fetch("/api/resume/pdf", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ resume }),
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to generate PDF")
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = "tailored-resume.pdf"
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 function formatError(message: string) {
   if (/no output generated/i.test(message)) {
     return "Something went wrong on our end. Please try again in a minute — if it keeps happening, try shortening the job description."
@@ -459,7 +479,7 @@ export default function ResumeAnalyzer({
 
   const handleDownload = async (resume: Resume) => {
     try {
-      await handleDownload(resume)
+      await downloadResumePdf(resume)
       trackEventClient({
         event: "pdf_downloaded",
         sessionId: isAnonymous ? "anonymous" : undefined,

@@ -8,8 +8,21 @@ type TrackEventInput = {
   metadata?: Record<string, unknown>
 }
 
+// Simple in-memory rate limiter: prevent same event from firing more than once per 500ms
+const lastFired = new Map<string, number>()
+
 export function trackEventClient(input: TrackEventInput): void {
   if (typeof window === "undefined") return
+
+  const key = `${input.event}:${input.sessionId ?? "default"}:${input.path ?? ""}`
+  const now = Date.now()
+  const last = lastFired.get(key) ?? 0
+
+  if (now - last < 500) {
+    return // rate limited
+  }
+
+  lastFired.set(key, now)
 
   void (async () => {
     try {

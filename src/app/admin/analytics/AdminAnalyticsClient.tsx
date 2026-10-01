@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { AnalyticsEventName, ANALYTICS_EVENTS } from "@/lib/analytics/event-types"
+import { resetAnalytics } from "@/actions/resetAnalytics"
 
 interface AdminAnalyticsClientProps {
   totalEvents: number
@@ -77,9 +79,26 @@ export default function AdminAnalyticsClient({
   totalEvents,
   counts,
   recentEvents,
-  dateRange,
-}: AdminAnalyticsClientProps) {
+dateRange,
+  }: AdminAnalyticsClientProps) {
   const [filterEvent, setFilterEvent] = useState<string>("all")
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
+
+  const handleReset = async () => {
+    setIsResetting(true)
+    try {
+      const result = await resetAnalytics()
+      if (result.success) {
+        window.location.reload()
+      } else {
+        alert(result.error || "Failed to reset analytics")
+      }
+    } finally {
+      setIsResetting(false)
+      setShowResetConfirm(false)
+    }
+  }
 
   const filteredEvents = filterEvent === "all"
     ? recentEvents
@@ -97,16 +116,45 @@ export default function AdminAnalyticsClient({
           <h1 className="mm-heading-lg text-mm-ink">Analytics Dashboard</h1>
           <p className="text-sm text-mm-steel">Product analytics for Hirefit</p>
         </div>
-        <select
-          value={dateRange}
-          onChange={(e) => handleDateRangeChange(e.target.value)}
-          className="mm-input w-[180px] bg-mm-surface border-mm-hairline"
-        >
-          <option value="today">Today</option>
-          <option value="3d">Last 3 days</option>
-          <option value="7d">Last 7 days</option>
-          <option value="30d">Last 30 days</option>
-        </select>
+        <div className="flex items-center gap-3">
+          <select
+            value={dateRange}
+            onChange={(e) => handleDateRangeChange(e.target.value)}
+            className="mm-input w-[180px] bg-mm-surface border-mm-hairline"
+          >
+            <option value="today">Today</option>
+            <option value="3d">Last 3 days</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+          </select>
+          <div className="flex items-center gap-2">
+            {showResetConfirm ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-mm-steel">Confirm reset all data?</span>
+                <Button variant="destructive" size="sm" onClick={handleReset} disabled={isResetting}>
+                  {isResetting ? "Resetting…" : "Yes, Reset"}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowResetConfirm(false)}>
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <Button variant="destructive" size="sm" onClick={() => setShowResetConfirm(true)}>
+                Reset Analytics
+              </Button>
+            )}
+          </div>
+          <select
+            value={dateRange}
+            onChange={(e) => handleDateRangeChange(e.target.value)}
+            className="mm-input w-[180px] bg-mm-surface border-mm-hairline"
+          >
+            <option value="today">Today</option>
+            <option value="3d">Last 3 days</option>
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+          </select>
+        </div>
       </div>
 
       {/* Overview Cards */}
