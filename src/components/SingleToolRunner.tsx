@@ -25,7 +25,7 @@ function KeywordList({ title, items, tone }: KeywordListProps) {
   if (!items.length) return null
   return (
     <div className="space-y-2">
-      <h4 className="text-sm font-semibold text-mm-ink">{title}</h4>
+      <h3 className="text-sm font-semibold text-mm-ink">{title}</h3>
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
           <Badge key={item} variant={tone === "warn" ? "destructive" : "secondary"}>
@@ -40,7 +40,7 @@ function KeywordList({ title, items, tone }: KeywordListProps) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-2">
-      <h4 className="text-sm font-semibold text-mm-ink">{title}</h4>
+      <h3 className="text-sm font-semibold text-mm-ink">{title}</h3>
       {children}
     </div>
   )

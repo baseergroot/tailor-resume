@@ -131,7 +131,7 @@ export default function ResumeUploadForm({
           <div className="flex items-start gap-3">
             <InfoIcon className="w-5 h-5 text-mm-coral mt-0.5 flex-shrink-0" />
             <div>
-              <h4 className="text-sm font-semibold text-mm-ink mb-1">What is ATS?</h4>
+              <p className="text-sm font-semibold text-mm-ink mb-1">What is ATS?</p>
               <p className="text-sm text-mm-steel">
                 ATS (Applicant Tracking System) is software that filters resumes before humans see them.
                 <strong className="text-mm-ink">75% of resumes are rejected by ATS</strong> for missing keywords.
