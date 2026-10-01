@@ -45,6 +45,41 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
+    description:
+      "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
+      description:
+        "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
+      url: siteUrl,
+      siteName: "HireFit",
+      type: "website",
+      locale: "en_US",
+      images: [
+        {
+          url: `${siteUrl}/og.png`,
+          width: 1200,
+          height: 630,
+          alt: "HireFit - AI Resume Tailoring",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
+      description:
+        "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
+      images: [`${siteUrl}/og-image.png`],
+    },
+  };
+}
+
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -184,7 +219,7 @@ export default function Page() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full">
           <CTATracking
-            href="/dashboard"
+            href="/tools/ats-scoring"
             className="mm-btn mm-btn-primary px-10 py-4 text-lg w-full sm:w-auto flex-1"
             eventName="landing_cta_clicked"
             ctaLabel="Tailor My Resume Free"
@@ -301,7 +336,7 @@ export default function Page() {
           Get AI-powered analysis, ATS scoring, and a tailored resume in under a minute.
         </p>
         <CTATracking
-          href="/dashboard"
+          href="/tools/ats-scoring"
           className="mm-btn mm-btn-tertiary px-8 py-3 text-base"
           eventName="landing_cta_clicked"
           ctaLabel="Start Now — It&apos;s Free"
@@ -362,7 +397,7 @@ export default function Page() {
               <h3 className="text-sm font-medium mb-3">Product</h3>
               <ul className="space-y-2">
                 <li><a href="#features" className="text-sm text-mm-muted hover:text-white transition-colors">Features</a></li>
-                <li><Link href="/dashboard" className="text-sm text-mm-muted hover:text-white transition-colors">Get Started</Link></li>
+                <li><Link href="/tools/ats-scoring" className="text-sm text-mm-muted hover:text-white transition-colors">Get Started</Link></li>
               </ul>
             </div>
             <div>

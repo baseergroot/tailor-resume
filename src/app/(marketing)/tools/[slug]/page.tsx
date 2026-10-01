@@ -4,9 +4,21 @@ import { notFound } from "next/navigation";
 import { tools, reverseTools, type Tool } from "@/data/tools";
 import SingleToolRunner from "@/components/SingleToolRunner";
 import type { SingleToolSlug } from "@/actions/singleToolRunner";
+import { promises as fs } from "fs";
+import path from "path";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://tailor-resume-agent.vercel.app";
+
+async function getToolPageLastModified(slug: string): Promise<Date> {
+  try {
+    const filePath = path.join(process.cwd(), `src/app/(marketing)/tools/${slug}/page.tsx`);
+    const stats = await fs.stat(filePath);
+    return stats.mtime;
+  } catch {
+    return new Date();
+  }
+}
 
 export function generateStaticParams() {
   return tools.map((tool) => ({ slug: tool.slug }));
@@ -20,11 +32,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const tool = tools.find((t) => t.slug === slug);
   if (!tool) return {};
+  const lastModified = await getToolPageLastModified(slug);
   return {
     title: tool.metaTitle,
     description: tool.metaDescription,
     alternates: {
       canonical: `/tools/${tool.slug}`,
+    },
+    other: {
+      lastModified: lastModified.toISOString(),
     },
   };
 }
@@ -150,7 +166,7 @@ export default async function ToolPage({
           <h2 className="mm-heading-sm text-mm-ink text-center mb-6">
             More from Hirefit
           </h2>
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
             {reverseTools().map((related) => (
               <Link
                 key={related.slug}
@@ -160,11 +176,19 @@ export default async function ToolPage({
                 {related.name}
               </Link>
             ))}
+          </div>
+          <div className="flex flex-wrap justify-center gap-2">
             <Link
               href="/guides/tailor-resume-to-job-description"
               className="mm-btn mm-btn-secondary text-sm px-4 py-2"
             >
               Tailoring Guide
+            </Link>
+            <Link
+              href="/guides"
+              className="mm-btn mm-btn-secondary text-sm px-4 py-2"
+            >
+              All Guides
             </Link>
           </div>
         </div>

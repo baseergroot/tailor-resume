@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Resume & ATS Guides",
+    description:
+      "Step-by-step guides on tailoring your resume to any job description, ATS optimization, and keyword matching for the modern job market.",
+    alternates: {
+      canonical: "/guides",
+    },
+  };
+}
+
 const guides = [
   {
     href: "/guides/tailor-resume-to-job-description",
@@ -47,6 +58,16 @@ export default function GuidesIndex() {
             </span>
           </Link>
         ))}
+      </section>
+
+      <section className="max-w-3xl mx-auto px-4 sm:px-8 pb-16 text-center">
+        <h2 className="mm-heading-sm text-mm-ink mb-4">Try the Tools</h2>
+        <p className="text-sm text-mm-steel mb-6">
+          Apply what you&apos;ve learned with Hirefit&apos;s free AI resume tools
+        </p>
+        <Link href="/tools" className="mm-btn mm-btn-primary px-8 py-3 text-base">
+          Explore All Tools
+        </Link>
       </section>
     </main>
   );

@@ -13,6 +13,17 @@ export const metadata: Metadata = {
   },
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "How to Tailor Your Resume to a Job Description (Step-by-Step)",
+    description:
+      "A step-by-step guide to tailoring your resume for any job description: identify keywords, rewrite bullets, fix ATS gaps, and keep every claim honest.",
+    alternates: {
+      canonical: "/guides/tailor-resume-to-job-description",
+    },
+  };
+}
+
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -269,7 +280,7 @@ export default function TailorResumeGuide() {
           skill and metric. No invented experience. Free to use.
         </p>
         <Link
-          href="/dashboard"
+          href="/tools/ats-scoring"
           className="mm-btn mm-btn-tertiary px-8 py-3 text-base"
         >
           Start Tailoring Free
@@ -301,7 +312,7 @@ export default function TailorResumeGuide() {
           <h2 className="mm-heading-sm text-mm-ink mb-6">
             Hirefit tools that help you tailor
           </h2>
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
             <Link
               href="/tools/ats-scoring"
               className="mm-btn mm-btn-secondary text-sm px-4 py-2"
@@ -327,12 +338,18 @@ export default function TailorResumeGuide() {
               Resume Rewriter
             </Link>
             <Link
-              href="/dashboard"
+              href="/tools/ats-scoring"
               className="mm-btn mm-btn-primary text-sm px-4 py-2"
             >
               Try Hirefit Free
             </Link>
           </div>
+          <Link
+            href="/tools"
+            className="mm-btn mm-btn-secondary text-sm px-4 py-2 inline-block"
+          >
+            View All Tools
+          </Link>
         </div>
       </section>
     </main>

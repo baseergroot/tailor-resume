@@ -21,8 +21,8 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="text-sm font-medium text-mm-steel hover:text-mm-ink transition-colors">
               Home
             </Link>
-            <Link href="/dashboard" className="text-sm font-medium text-mm-steel hover:text-mm-ink transition-colors">
-              Features
+            <Link href="/tools" className="text-sm font-medium text-mm-steel hover:text-mm-ink transition-colors">
+              Tools
             </Link>
           </div>
         </div>

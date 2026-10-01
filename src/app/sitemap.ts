@@ -1,42 +1,52 @@
 import type { MetadataRoute } from "next";
 import { tools } from "@/data/tools";
+import { promises as fs } from "fs";
+import path from "path";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://tailor-resume-agent.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.hirefit.live";
 
-// Stable date for sitemap - use a fixed build date or the latest deploy date
-// In production, this could be set via env var: process.env.BUILD_DATE
-const BUILD_DATE = new Date("2025-01-15");
+async function getLastModified(filePath: string): Promise<Date> {
+  try {
+    const stats = await fs.stat(filePath);
+    return stats.mtime;
+  } catch {
+    return new Date();
+  }
+}
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/`,
-      lastModified: BUILD_DATE,
+      lastModified: await getLastModified(path.join(process.cwd(), "src/app/(marketing)/page.tsx")),
       changeFrequency: "weekly",
       priority: 1,
     },
   ];
 
   for (const tool of tools) {
+    const toolPath = path.join(process.cwd(), `src/app/(marketing)/tools/${tool.slug}/page.tsx`);
     entries.push({
       url: `${siteUrl}/tools/${tool.slug}`,
-      lastModified: BUILD_DATE,
+      lastModified: await getLastModified(toolPath),
       changeFrequency: "monthly",
       priority: 0.8,
     });
   }
 
+  const guidesIndexPath = path.join(process.cwd(), "src/app/(marketing)/guides/page.tsx");
   entries.push({
     url: `${siteUrl}/guides`,
-    lastModified: BUILD_DATE,
+    lastModified: await getLastModified(guidesIndexPath),
     changeFrequency: "monthly",
     priority: 0.7,
   });
 
+  const guidePath = path.join(process.cwd(), "src/app/(marketing)/guides/tailor-resume-to-job-description/page.tsx");
   entries.push({
     url: `${siteUrl}/guides/tailor-resume-to-job-description`,
-    lastModified: BUILD_DATE,
+    lastModified: await getLastModified(guidePath),
     changeFrequency: "monthly",
     priority: 0.9,
   });
