@@ -44,3 +44,4 @@ PDF upload text extraction.txt
 flow.txt
 
 certificates
+.env*

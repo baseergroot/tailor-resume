@@ -10,17 +10,6 @@ export const metadata: Metadata = {
   },
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Resume & ATS Guides",
-    description:
-      "Step-by-step guides on tailoring your resume to any job description, ATS optimization, and keyword matching for the modern job market.",
-    alternates: {
-      canonical: "/guides",
-    },
-  };
-}
-
 const guides = [
   {
     href: "/guides/tailor-resume-to-job-description",

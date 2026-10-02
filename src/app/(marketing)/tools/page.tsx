@@ -11,17 +11,6 @@ export const metadata: Metadata = {
   },
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "Free AI Resume Tools — ATS Scorer, JD Analyzer, Gap Finder & More",
-    description:
-      "Six free AI tools to optimize your resume for any job: ATS scoring, job description analysis, gap detection, resume rewriting, and cover letter generation.",
-    alternates: {
-      canonical: "/tools",
-    },
-  };
-}
-
 const toolIcons: Record<string, string> = {
   "ats-scoring": "📊",
   "resume-analyzer": "🔍",

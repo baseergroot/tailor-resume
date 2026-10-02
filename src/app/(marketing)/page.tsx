@@ -45,41 +45,6 @@ export const metadata: Metadata = {
   },
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
-    description:
-      "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
-    alternates: {
-      canonical: "/",
-    },
-    openGraph: {
-      title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
-      description:
-        "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
-      url: siteUrl,
-      siteName: "HireFit",
-      type: "website",
-      locale: "en_US",
-      images: [
-        {
-          url: `${siteUrl}/og.png`,
-          width: 1200,
-          height: 630,
-          alt: "HireFit - AI Resume Tailoring",
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
-      description:
-        "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
-      images: [`${siteUrl}/og-image.png`],
-    },
-  };
-}
-
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",

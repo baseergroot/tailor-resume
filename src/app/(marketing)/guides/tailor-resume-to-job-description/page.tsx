@@ -13,17 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: "How to Tailor Your Resume to a Job Description (Step-by-Step)",
-    description:
-      "A step-by-step guide to tailoring your resume for any job description: identify keywords, rewrite bullets, fix ATS gaps, and keep every claim honest.",
-    alternates: {
-      canonical: "/guides/tailor-resume-to-job-description",
-    },
-  };
-}
-
 const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
