@@ -11,7 +11,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <Logo className="w-6 h-6" />
               <span className="text-lg font-semibold tracking-tight text-mm-ink">
-                Hirefit
+                HireFit
               </span>
             </Link>
             <Link href="/" className="text-sm font-medium text-mm-steel hover:text-mm-ink transition-colors">

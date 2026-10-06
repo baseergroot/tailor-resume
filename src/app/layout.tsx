@@ -19,18 +19,18 @@ const geistMono = Geist_Mono({
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://tailor-resume-agent.vercel.app";
 
-const siteTitle = "Hirefit — AI Resume Tailoring & ATS Optimization";
+const siteTitle = "HireFit — AI Resume Tailoring & ATS Optimization";
 const siteDescription =
-  "Hirefit is the free AI resume tailoring tool. Upload your resume, paste a job description, and get an ATS-optimized resume with keyword analysis, gap detection, and a custom cover letter in under a minute.";
+  "HireFit is the free AI resume tailoring tool. Upload your resume, paste a job description, and get an ATS-optimized resume with keyword analysis, gap detection, and a custom cover letter in under a minute.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: siteTitle,
-    template: "%s | Hirefit",
+    template: "%s | HireFit",
   },
   description: siteDescription,
-  applicationName: "Hirefit",
+  applicationName: "HireFit",
   keywords: [
     "AI resume builder",
     "resume tailoring",
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
     "AI cover letter generator",
     "resume rewriting tool",
   ],
-  authors: [{ name: "Hirefit" }],
-  creator: "Hirefit",
+  authors: [{ name: "HireFit" }],
+  creator: "HireFit",
   alternates: {
     canonical: "/",
   },
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Hirefit",
+    siteName: "HireFit",
     title: siteTitle,
     description: siteDescription,
     images: [
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Hirefit — AI Resume Tailoring & ATS Optimization",
+        alt: "HireFit — AI Resume Tailoring & ATS Optimization",
       },
     ],
   },

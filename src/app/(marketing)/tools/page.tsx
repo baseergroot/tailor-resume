@@ -24,7 +24,7 @@ export default function ToolsIndex() {
   return (
     <main className="min-h-screen">
       <section className="px-4 pt-14 pb-12 max-w-3xl mx-auto">
-        <span className="mm-badge mm-badge-new mb-6 text-xs">Hirefit AI Tools</span>
+        <span className="mm-badge mm-badge-new mb-6 text-xs">HireFit AI Tools</span>
         <h1 className="mm-heading-lg text-mm-ink mb-4">
           Free AI Resume Tools
         </h1>

@@ -23,7 +23,7 @@ export default function GuidesIndex() {
   return (
     <main className="min-h-screen">
       <section className="px-4 pt-14 pb-12 max-w-3xl mx-auto">
-        <span className="mm-badge mm-badge-new mb-6 text-xs">Hirefit Guides</span>
+        <span className="mm-badge mm-badge-new mb-6 text-xs">HireFit Guides</span>
         <h1 className="mm-heading-lg text-mm-ink mb-4">
           Resume and ATS Guides
         </h1>
@@ -52,7 +52,7 @@ export default function GuidesIndex() {
       <section className="max-w-3xl mx-auto px-4 sm:px-8 pb-16 text-center">
         <h2 className="mm-heading-sm text-mm-ink mb-4">Try the Tools</h2>
         <p className="text-sm text-mm-steel mb-6">
-          Apply what you&apos;ve learned with Hirefit&apos;s free AI resume tools
+          Apply what you&apos;ve learned with HireFit&apos;s free AI resume tools
         </p>
         <Link href="/tools" className="mm-btn mm-btn-primary px-8 py-3 text-base">
           Explore All Tools

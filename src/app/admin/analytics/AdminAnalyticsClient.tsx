@@ -114,7 +114,7 @@ dateRange,
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="mm-heading-lg text-mm-ink">Analytics Dashboard</h1>
-          <p className="text-sm text-mm-steel">Product analytics for Hirefit</p>
+          <p className="text-sm text-mm-steel">Product analytics for HireFit</p>
         </div>
         <div className="flex items-center gap-3">
           <select

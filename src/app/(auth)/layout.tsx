@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
         <Link href="/" className="flex items-center gap-2 mb-6">
           <Logo className="w-8 h-8" />
           <span className="text-xl font-semibold tracking-tight text-mm-ink">
-            Hirefit
+            HireFit
           </span>
         </Link>
         {children}

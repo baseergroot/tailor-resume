@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Hirefit — AI Resume Tailoring & ATS Optimization",
-    short_name: "Hirefit",
+    name: "HireFit — AI Resume Tailoring & ATS Optimization",
+    short_name: "HireFit",
     description:
       "Free AI resume tailoring tool: optimize your resume for any job description with ATS scoring and cover letter generation.",
     start_url: "/",

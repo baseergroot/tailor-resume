@@ -20,10 +20,10 @@ export const tools: Tool[] = [
     name: "ATS Scorer",
     metaTitle: "ATS Scoring — Check Your Resume ATS Compatibility",
     metaDescription:
-      "Check your resume ATS compatibility for free. Hirefit scores your resume against any job description and shows your before-and-after score after AI rewriting.",
+      "Check your resume ATS compatibility for free. HireFit scores your resume against any job description and shows your before-and-after score after AI rewriting.",
     h1: "Free ATS Resume Scoring",
     definition:
-      "An ATS score measures how well your resume matches the keywords, skills, and experience a job description asks for. Hirefit scores your resume against any job description and shows your score before and after rewriting, so you can see exactly how much your optimization helped.",
+      "An ATS score measures how well your resume matches the keywords, skills, and experience a job description asks for. HireFit scores your resume against any job description and shows your score before and after rewriting, so you can see exactly how much your optimization helped.",
     howItWorks: [
       "Upload your resume as a PDF or DOCX file.",
       "Paste the job description you are targeting.",
@@ -39,14 +39,14 @@ export const tools: Tool[] = [
     faqs: [
       {
         q: "What is a good ATS resume score?",
-        a: "There is no universal grade. A good score means your resume covers the requirements the employer explicitly asked for. Hirefit shows coverage per requirement so you can see what is strong and what is missing.",
+        a: "There is no universal grade. A good score means your resume covers the requirements the employer explicitly asked for. HireFit shows coverage per requirement so you can see what is strong and what is missing.",
       },
       {
         q: "Does a high ATS score guarantee an interview?",
         a: "No. An ATS score only measures keyword and requirement matching. Recruiters still evaluate experience, culture fit, and interview performance.",
       },
       {
-        q: "Can I improve my ATS score with Hirefit?",
+        q: "Can I improve my ATS score with HireFit?",
         a: "Yes. The resume rewriter keeps every real skill and metric from your resume while adding the job description keywords your resume truthfully supports. Your score updates after rewriting so you can see the improvement.",
       },
     ],
@@ -57,7 +57,7 @@ export const tools: Tool[] = [
     name: "Resume Analyzer",
     metaTitle: "Resume Analyzer — Free AI Resume Review",
     metaDescription:
-      "Get a free AI resume review. Hirefit analyzes your resume structure, bullet strength, and keyword density against any job description and shows what to improve.",
+      "Get a free AI resume review. HireFit analyzes your resume structure, bullet strength, and keyword density against any job description and shows what to improve.",
     h1: "Free AI Resume Analysis",
     definition:
       "The resume analyzer reviews your resume structure, content quality, and keyword density against a target job description. It flags weak bullets, vague wording, and missing keywords so you know exactly what to improve before applying.",
@@ -80,11 +80,11 @@ export const tools: Tool[] = [
       },
       {
         q: "Is the resume analysis really free?",
-        a: "Yes. All six Hirefit AI tools, including the resume analyzer, are completely free to use.",
+        a: "Yes. All six HireFit AI tools, including the resume analyzer, are completely free to use.",
       },
       {
         q: "Which resume formats are supported?",
-        a: "Hirefit supports PDF and DOCX uploads up to 5MB.",
+        a: "HireFit supports PDF and DOCX uploads up to 5MB.",
       },
     ],
   },
@@ -94,12 +94,12 @@ export const tools: Tool[] = [
     name: "JD Analyzer",
     metaTitle: "Job Description Analyzer — Extract Requirements & Keywords",
     metaDescription:
-      "Extract every requirement, skill, and keyword from any job description for free. Hirefit's JD analyzer separates must-have from nice-to-have items.",
+      "Extract every requirement, skill, and keyword from any job description for free. HireFit's JD analyzer separates must-have from nice-to-have items.",
     h1: "Analyze Any Job Description",
     definition:
       "The JD analyzer extracts the requirements, hard skills, soft skills, and keywords from any job description, and separates must-have items from nice-to-have ones. It tells you exactly what an employer is filtering for before you tailor your resume.",
     howItWorks: [
-      "Paste any job description into Hirefit.",
+      "Paste any job description into HireFit.",
       "AI extracts requirements, skills, and keywords.",
       "Must-have and nice-to-have items are separated clearly.",
       "Use the extraction as your resume tailoring checklist.",
@@ -116,7 +116,7 @@ export const tools: Tool[] = [
         a: "It is a tool that breaks a job post down into its concrete requirements, skills, and keywords so you can tailor your resume to exactly what the employer is filtering for.",
       },
       {
-        q: "Does Hirefit analyze any job description?",
+        q: "Does HireFit analyze any job description?",
         a: "Yes. You can paste any job description from any platform or company career page.",
       },
     ],
@@ -127,7 +127,7 @@ export const tools: Tool[] = [
     name: "Gap Analyzer",
     metaTitle: "Resume Gap Analyzer — Find Missing Skills",
     metaDescription:
-      "Find the missing skills between your resume and any job description. Hirefit's gap analyzer lists gaps with fair, neutral wording so you can decide for yourself.",
+      "Find the missing skills between your resume and any job description. HireFit's gap analyzer lists gaps with fair, neutral wording so you can decide for yourself.",
     h1: "Identify Your Resume Gaps",
     definition:
       "The gap analyzer identifies the skills and experience that appear in a job description but are not demonstrated in your resume. Gaps are worded neutrally, so you can review them and decide for yourself whether they matter for the role.",
@@ -160,7 +160,7 @@ export const tools: Tool[] = [
     name: "Resume Rewriter",
     metaTitle: "AI Resume Rewriter — Tailor Your Resume to Any Job",
     metaDescription:
-      "Rewrite your resume for any job description with AI. Hirefit preserves every real skill and metric while optimizing bullet points and keywords — it never invents experience.",
+      "Rewrite your resume for any job description with AI. HireFit preserves every real skill and metric while optimizing bullet points and keywords — it never invents experience.",
     h1: "AI Resume Rewriting That Preserves Your Experience",
     definition:
       "The resume rewriter tailors your resume to a job description by optimizing bullet points, language, and impact statements. It is preservation-first: every technology, skill, and metric from your original resume stays, and it never invents experience.",
@@ -179,7 +179,7 @@ export const tools: Tool[] = [
     faqs: [
       {
         q: "Will the rewriter invent skills I do not have?",
-        a: "No. Hirefit only uses job description keywords that your existing resume can truthfully support, and it keeps every technology and skill you already listed.",
+        a: "No. HireFit only uses job description keywords that your existing resume can truthfully support, and it keeps every technology and skill you already listed.",
       },
       {
         q: "Does rewriting change my metrics?",
@@ -197,7 +197,7 @@ export const tools: Tool[] = [
     name: "Cover Letter Gen",
     metaTitle: "AI Cover Letter Generator — Free Personalized Letters",
     metaDescription:
-      "Generate a personalized cover letter in seconds. Hirefit creates cover letters aligned with the job description, based on your real experience from your resume.",
+      "Generate a personalized cover letter in seconds. HireFit creates cover letters aligned with the job description, based on your real experience from your resume.",
     h1: "Free AI Cover Letter Generator",
     definition:
       "The cover letter generator creates a personalized cover letter aligned with the job description you are targeting. It is built from your real resume experience, so it mentions actual achievements instead of generic filler.",
@@ -216,7 +216,7 @@ export const tools: Tool[] = [
     faqs: [
       {
         q: "Is the AI cover letter free?",
-        a: "Yes. The cover letter generator is one of six free AI tools included with Hirefit.",
+        a: "Yes. The cover letter generator is one of six free AI tools included with HireFit.",
       },
       {
         q: "Does the letter use my real experience?",

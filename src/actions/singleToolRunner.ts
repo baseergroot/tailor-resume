@@ -66,7 +66,7 @@ export async function runSingleTool(
 
   if (!user?.resume?.resumeText) {
     throw new Error(
-      "Upload your resume first. You can do this on the Hirefit dashboard before running this tool.",
+      "Upload your resume first. You can do this on the HireFit dashboard before running this tool.",
     )
   }
 

@@ -95,7 +95,7 @@ export default async function ToolPage({
 
       {/* Hero / Answer-first */}
       <section className="px-4 pt-14 pb-10 max-w-3xl mx-auto text-center">
-        <span className="mm-badge mm-badge-new mb-6 text-xs">Hirefit AI Tool</span>
+        <span className="mm-badge mm-badge-new mb-6 text-xs">HireFit AI Tool</span>
         <h1 className="mm-heading-lg text-mm-ink mb-5">{tool.h1}</h1>
         <p className="text-base sm:text-lg text-mm-steel leading-relaxed">
           {tool.definition}
@@ -164,7 +164,7 @@ export default async function ToolPage({
       <section className="border-t border-mm-hairline bg-mm-surface py-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-8">
           <h2 className="mm-heading-sm text-mm-ink text-center mb-6">
-            More from Hirefit
+            More from HireFit
           </h2>
           <div className="flex flex-wrap justify-center gap-2 mb-4">
             {reverseTools().map((related) => (

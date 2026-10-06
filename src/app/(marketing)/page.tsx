@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "HireFit — AI Resume Tailor | Beat ATS Filters Instantly",
     description:
       "Paste a job description and upload your resume. HireFit's AI rewrites your resume to match, scores it against ATS filters, and writes your cover letter in seconds.",
-    images: [`${siteUrl}/og-image.png`],
+    images: [`${siteUrl}/og.png`],
   },
 };
 
@@ -148,10 +148,11 @@ const testimonials = [
 ];
 
 const stats = [
-  { value: "2,000+", label: "Resumes Tailored" },
-  { value: "89%", label: "Avg ATS Score Improvement" },
-  { value: "12+", label: "Countries" },
+  { value: "2,000+", label: "Resumes Tailored*" },
+  { value: "89%", label: "Avg ATS Score Improvement*" },
+  { value: "12+", label: "Countries*" },
 ];
+
 
 export default function Page() {
   return (
@@ -177,10 +178,10 @@ export default function Page() {
       <section className="flex flex-col items-center justify-center text-center px-4 pt-14 pb-12 sm:pt-24 sm:pb-20 max-w-5xl mx-auto">
         <span className="mm-badge mm-badge-new mb-6 text-xs">AI-Powered & Free</span>
         <h1 className="mm-hero-display text-mm-ink max-w-4xl mx-auto mb-4">
-          Get Your Resume Past ATS Filters in 30 Seconds
+          Tailor Your Resume to Any Job Description in 30 Seconds
         </h1>
         <p className="text-base sm:text-xl text-mm-steel mb-8 sm:mb-10 leading-relaxed mx-auto max-w-2xl">
-          Paste a job description. Upload your resume. Get a tailored resume, ATS score, and cover letter — instantly.
+          Upload your resume, paste a job description, and HireFit&apos;s AI tailors your resume to match — optimized for ATS, with a cover letter included. Free, no signup required for your first tailoring.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 w-full">
           <CTATracking
@@ -211,6 +212,9 @@ export default function Page() {
               </div>
             ))}
           </div>
+          <p className="text-xs text-mm-muted text-center mt-4">
+            * Based on internal platform data as of 2025. Individual results may vary.
+          </p>
         </div>
       </section>
 
@@ -363,6 +367,15 @@ export default function Page() {
               <ul className="space-y-2">
                 <li><a href="#features" className="text-sm text-mm-muted hover:text-white transition-colors">Features</a></li>
                 <li><Link href="/tools/ats-scoring" className="text-sm text-mm-muted hover:text-white transition-colors">Get Started</Link></li>
+                <li><a href="/about" className="text-sm text-mm-muted hover:text-white transition-colors">About</a></li>
+                <li><a href="/contact" className="text-sm text-mm-muted hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium mb-3">Legal</h3>
+              <ul className="space-y-2">
+                <li><a href="/privacy" className="text-sm text-mm-muted hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="/terms" className="text-sm text-mm-muted hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
             </div>
             <div>

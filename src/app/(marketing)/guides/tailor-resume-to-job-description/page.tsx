@@ -50,7 +50,7 @@ const faqSchema = {
       name: "What is an ATS resume score?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "An ATS score measures how well your resume matches the keywords and requirements an applicant tracking system filters for. A higher score means your resume is more likely to be seen by a human. Hirefit scores your resume before and after tailoring so you can see the difference.",
+        text: "An ATS score measures how well your resume matches the keywords and requirements an applicant tracking system filters for. A higher score means your resume is more likely to be seen by a human. HireFit scores your resume before and after tailoring so you can see the difference.",
       },
     },
     {
@@ -58,7 +58,7 @@ const faqSchema = {
       name: "How long does tailoring a resume take?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Manually, tailoring takes 30–60 minutes per application. With an AI tool like Hirefit, the same process takes under a minute: upload your resume, paste the job description, and the AI extracts the requirements and rewrites your bullets for you.",
+        text: "Manually, tailoring takes 30–60 minutes per application. With an AI tool like HireFit, the same process takes under a minute: upload your resume, paste the job description, and the AI extracts the requirements and rewrites your bullets for you.",
       },
     },
     {
@@ -139,7 +139,7 @@ export default function TailorResumeGuide() {
       {/* Breadcrumb (visible) */}
       <nav className="max-w-3xl mx-auto px-4 sm:px-8 pt-14 text-sm text-mm-steel">
         <Link href="/" className="hover:text-mm-ink transition-colors">
-          Hirefit
+          HireFit
         </Link>
         <span className="mx-2">/</span>
         <span className="text-mm-ink font-medium">Resume Tailoring Guide</span>
@@ -264,7 +264,7 @@ export default function TailorResumeGuide() {
           Tailor your resume with AI in under a minute
         </h2>
         <p className="text-sm mb-6 mx-auto ">
-          Hirefit scores your resume against any job description, identifies
+          HireFit scores your resume against any job description, identifies
           missing keywords, and rewrites your bullets — preserving every real
           skill and metric. No invented experience. Free to use.
         </p>
@@ -299,7 +299,7 @@ export default function TailorResumeGuide() {
       <section className="border-t border-mm-hairline bg-mm-surface py-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 text-center">
           <h2 className="mm-heading-sm text-mm-ink mb-6">
-            Hirefit tools that help you tailor
+            HireFit tools that help you tailor
           </h2>
           <div className="flex flex-wrap justify-center gap-2 mb-4">
             <Link
@@ -330,7 +330,7 @@ export default function TailorResumeGuide() {
               href="/tools/ats-scoring"
               className="mm-btn mm-btn-primary text-sm px-4 py-2"
             >
-              Try Hirefit Free
+              Try HireFit Free
             </Link>
           </div>
           <Link
