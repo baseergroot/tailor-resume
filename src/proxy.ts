@@ -1,10 +1,17 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
+import { clerkMiddleware } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) {
-    await auth.protect()
+  // Handle www -> non-www redirect, excluding sitemap.xml and robots.txt
+  const host = req.headers.get('host') || ''
+  if (host === 'www.hirefit.live') {
+    const url = req.nextUrl.clone()
+    url.host = 'hirefit.live'
+    url.protocol = 'https'
+    // Don't redirect sitemap.xml or robots.txt
+    if (!url.pathname.startsWith('/sitemap') && url.pathname !== '/robots.txt') {
+      return NextResponse.redirect(url, 301)
+    }
   }
 })
 
