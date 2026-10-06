@@ -260,37 +260,37 @@ export default function Page() {
           Six AI tools that work together to optimize every part of your resume
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="mm-card-coral">
+          <Link href="/tools/jd-analyzer" className="mm-card-coral group">
             <RiFileTextLine className="w-8 h-8 mb-4 opacity-80" />
             <h2 className="text-xl font-semibold mb-2">JD Analyzer</h2>
             <p className="text-sm leading-relaxed">
               Extracts key requirements, skills, and keywords from any job description.
             </p>
-          </div>
+          </Link>
 
-          <div className="mm-card-blue">
+          <Link href="/tools/ats-scoring" className="mm-card-blue group">
             <RiBarChartBoxLine className="w-8 h-8 mb-4 opacity-80" />
             <h2 className="text-xl font-semibold mb-2">ATS Scoring</h2>
             <p className="text-sm leading-relaxed">
               See your before and after ATS score with detailed compatibility metrics.
             </p>
-          </div>
+          </Link>
 
-          <div className="mm-card-purple">
+          <Link href="/tools/gap-analyzer" className="mm-card-purple group">
             <RiToolsLine className="w-8 h-8 mb-4 opacity-80" />
             <h2 className="text-xl font-semibold mb-2">Gap Analyzer</h2>
             <p className="text-sm leading-relaxed">
               Identifies missing skills and experience gaps between you and the role.
             </p>
-          </div>
+          </Link>
 
-          <div className="mm-card-magenta">
+          <Link href="/tools/resume-rewriter" className="mm-card-magenta group">
             <RiMoneyDollarCircleLine className="w-8 h-8 mb-4 opacity-80" />
             <h2 className="text-xl font-semibold mb-2">Smart Rewriting</h2>
             <p className="text-sm leading-relaxed">
               AI-powered rewriting that preserves your voice while optimizing for ATS.
             </p>
-          </div>
+          </Link>
         </div>
       </section>
 

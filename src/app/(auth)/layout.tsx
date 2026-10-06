@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Logo } from "@/components/logo";
+
+export const metadata: Metadata = {
+  robots: "noindex, nofollow",
+};
 
 export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
